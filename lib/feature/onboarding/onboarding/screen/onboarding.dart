@@ -152,7 +152,14 @@ class _PageScrollerState extends State<PageScroller> {
           ),
           const SizedBox(height: 32),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              idx == 3
+                  ? Navigator.pushNamed(context, WelcomeScreen.routeName)
+                  : controller.nextPage(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+            },
             child: Text(idx == 3 ? "Get Stated" : "Next",
                 style: TextStyle(color: Colors.white, fontSize: 16)),
             style: ElevatedButton.styleFrom(
