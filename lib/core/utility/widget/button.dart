@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
         onPressed;
       },
       style: ElevatedButton.styleFrom(
-        minimumSize: Size(MediaQuery.sizeOf(context).width * 0.85, 50),
+        minimumSize: Size(MediaQuery.sizeOf(context).width * 0.90, 50),
         backgroundColor: AppColors.primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),

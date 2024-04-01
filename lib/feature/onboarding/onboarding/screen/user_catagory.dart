@@ -27,23 +27,33 @@ class _UserCatagoryState extends State<UserCatagory> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    textAlign: TextAlign.center,
-                    'Choose your catagory',
-                    style: TextStyle(
-                        color: AppColors.secondaryColor,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Welcome back! please select your role',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
+              const SizedBox(height: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  children: [
+                    Text(
+                      textAlign: TextAlign.center,
+                      'Choose your catagory',
+                      style: TextStyle(
+                          color: AppColors.secondaryColor,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  children: [
+                    Text(
+                      'Welcome back! please select your role',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 100),
               Row(

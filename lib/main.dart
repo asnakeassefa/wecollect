@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
-import 'package:wecollect/core/utility/theme/theme.dart';
 
 import 'core/dj/injection.dart';
 import 'core/utility/router.dart';
-import 'feature/onboarding/onboarding/screen/onboarding.dart';
-import 'feature/onboarding/onboarding/screen/welcome.dart';
+import 'feature/auth/presentation/screen/forgot.dart';
+import 'feature/auth/presentation/screen/login.dart';
+import 'feature/auth/presentation/screen/reset.dart';
 
 void main() async {
   await configureInjection(Environment.prod);
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: routes,
-      home: const Onboarding(),
+      home: const ResetPassword(),
     );
   }
 }
