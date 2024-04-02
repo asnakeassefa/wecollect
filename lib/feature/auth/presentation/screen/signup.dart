@@ -38,15 +38,17 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               const SizedBox(height: 24),
               RichText(
-                text: TextSpan(
+                text: const TextSpan(
                   children: <TextSpan>[
                     TextSpan(
                         text: 'Create an ',
                         style: TextStyle(fontSize: 18, color: Colors.black)),
                     TextSpan(
-                        text: 'Account ',
+                        text: 'account ',
                         style: TextStyle(
-                            color: AppColors.secondaryColor, fontSize: 18)),
+                            color: Colors.blue,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold)),
                     TextSpan(
                         text: 'to initiate trash collection using ',
                         style: TextStyle(fontSize: 18, color: Colors.black)),

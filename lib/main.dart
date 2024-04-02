@@ -3,9 +3,7 @@ import 'package:injectable/injectable.dart';
 
 import 'core/dj/injection.dart';
 import 'core/utility/router.dart';
-import 'feature/auth/presentation/screen/forgot.dart';
-import 'feature/auth/presentation/screen/login.dart';
-import 'feature/auth/presentation/screen/reset.dart';
+import 'feature/home/presentation/screen/dashboard.dart';
 
 void main() async {
   await configureInjection(Environment.prod);
@@ -22,12 +20,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
+        fontFamily: 'Poppins',
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(elevation: 0),
         ),
       ),
       routes: routes,
-      home: const ResetPassword(),
+      home: const DashBoard(),
     );
   }
 }

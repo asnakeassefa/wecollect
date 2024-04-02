@@ -19,72 +19,73 @@ class _ResetPasswordState extends State<ResetPassword> {
         automaticallyImplyLeading: true,
       ),
       body: SingleChildScrollView(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Reset Password',
-              style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.secondaryColor),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'Enter the new password below so you can login',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 32),
-            const Text(
-              ' Enter Password',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10)),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "********",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  icon: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Icon(Icons.lock_outline,
-                          color: AppColors.secondaryColor)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Reset Password',
+                style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.secondaryColor),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Enter the new password below so you can login',
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 32),
+              const Text(
+                ' Enter Password',
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "********",
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    icon: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Icon(Icons.lock_outline,
+                            color: AppColors.secondaryColor)),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              ' Re-enter Password',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10)),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "********",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  icon: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Icon(Icons.lock_outline,
-                          color: AppColors.secondaryColor)),
+              const SizedBox(height: 24),
+              const Text(
+                ' Re-enter Password',
+                style: TextStyle(fontSize: 18),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "********",
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    icon: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Icon(Icons.lock_outline,
+                            color: AppColors.secondaryColor)),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 80),
-            CustomButton(onPressed: () {}, text: "DONE"),
-          ],
+              const SizedBox(height: 80),
+              CustomButton(onPressed: () {}, text: "DONE"),
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
