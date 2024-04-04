@@ -28,16 +28,16 @@ class _OnboardingState extends State<Onboarding> {
         builder: (context, state) {
           if (state is OnboardingLoaded) {
             // return LoginScreen();
-            return Scaffold();
+            return const Scaffold();
           } else if (state is UserAuthenticated) {
             // return HomePage();
-            return Scaffold();
+            return const Scaffold();
           } else if (state is OnboardingError) {
             return Center(
               child: Text(state.error),
             );
           } else if (state is OnboardingLoading) {
-            return Center(
+            return const Center(
               child: SizedBox(
                 height: 50,
                 width: 50,
@@ -160,8 +160,6 @@ class _PageScrollerState extends State<PageScroller> {
                       curve: Curves.easeInOut,
                     );
             },
-            child: Text(idx == 3 ? "Get Stated" : "Next",
-                style: TextStyle(color: Colors.white, fontSize: 16)),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
               shape: RoundedRectangleBorder(
@@ -169,6 +167,8 @@ class _PageScrollerState extends State<PageScroller> {
               ),
               minimumSize: Size(MediaQuery.sizeOf(context).width * 0.8, 50),
             ),
+            child: Text(idx == 3 ? "Get Stated" : "Next",
+                style: const TextStyle(color: Colors.white, fontSize: 16)),
           ),
         ],
       ),
@@ -206,7 +206,7 @@ class onboardingPages extends StatelessWidget {
                   Container(
                       height: 300,
                       width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: SvgPicture.asset(Img)),
                   const SizedBox(height: 30),
                   Text(

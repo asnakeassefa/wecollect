@@ -45,7 +45,8 @@ dependencies:
   get_it: ^7.6.7
   smooth_page_indicator: ^1.1.0
   intl_phone_field: ^3.2.0
-
+  http: any
+  stylish_bottom_bar: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

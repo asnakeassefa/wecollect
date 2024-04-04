@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
 import '../../../../core/utility/widget/button.dart';
@@ -14,9 +11,9 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +96,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "Ex: John Doe",
-                    hintStyle: TextStyle(color: Colors.grey),
+                    hintStyle: const TextStyle(color: Colors.grey),
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Icon(Icons.person_2_outlined,
@@ -123,7 +120,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "*********",
-                    hintStyle: TextStyle(color: Colors.grey),
+                    hintStyle: const TextStyle(color: Colors.grey),
                     icon: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Icon(Icons.lock_outline,

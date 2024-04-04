@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
+import 'feature/home_page.dart';
 import 'core/dj/injection.dart';
 import 'core/utility/router.dart';
-import 'feature/home/presentation/screen/dashboard.dart';
 
 void main() async {
   await configureInjection(Environment.prod);
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: routes,
-      home: const DashBoard(),
+      home: const HomePage(),
     );
   }
 }

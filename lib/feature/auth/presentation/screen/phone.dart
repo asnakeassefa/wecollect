@@ -42,7 +42,7 @@ class _RegisterPhoneState extends State<RegisterPhone> {
                   labelText: 'Phone Number',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(),
+                    borderSide: const BorderSide(),
                   ),
                 ),
                 initialCountryCode: 'ET',
