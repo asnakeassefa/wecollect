@@ -14,7 +14,7 @@ class _VerificationState extends State<Verification> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Column(
           children: [
             Text(

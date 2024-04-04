@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
 import 'landing/presentation/screen/dashboard.dart';
+import 'pickup_request/presentation/screen/pickup_home.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = '/home';
@@ -21,10 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> bottomBarPages = [
     const DashBoard(),
-    Scaffold(
-      appBar: AppBar(title: const Text('Assessment')),
-      body: const Center(child: Text('will be available soon!!!')),
-    ),
+    const PickUpHome(),
     Scaffold(
       appBar: AppBar(title: const Text('Jobs')),
       body: const Center(child: Text('will be available soon!!!')),
@@ -59,9 +56,9 @@ class _HomePageState extends State<HomePage> {
         ),
         items: [
           BottomBarItem(
-            icon: const BottomIcon(
+            icon: BottomIcon(
               imageName: 'assets/icons/home.svg',
-              color: Color(0xffd4d4d8),
+              color: AppColors.primaryColor,
               text: 'Home',
             ),
             selectedIcon: BottomIcon(
@@ -75,9 +72,9 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Quize'),
           ),
           BottomBarItem(
-              icon: const BottomIcon(
+              icon: BottomIcon(
                 imageName: 'assets/icons/press.svg',
-                color: Color(0xffd4d4d8),
+                color: AppColors.primaryColor,
                 text: 'Job',
               ),
               selectedIcon: BottomIcon(
@@ -90,9 +87,9 @@ class _HomePageState extends State<HomePage> {
               unSelectedColor: const Color(0xffd4d4d8),
               title: const Text('Jobs')),
           BottomBarItem(
-              icon: const BottomIcon(
+              icon: BottomIcon(
                 imageName: 'assets/icons/trash.svg',
-                color: Color(0xffd4d4d8),
+                color: AppColors.primaryColor,
                 text: 'Alert',
               ),
               selectedIcon: BottomIcon(
@@ -105,9 +102,9 @@ class _HomePageState extends State<HomePage> {
               unSelectedColor: const Color(0xffd4d4d8),
               title: const Text('Alert')),
           BottomBarItem(
-            icon: const BottomIcon(
+            icon: BottomIcon(
               imageName: 'assets/icons/profile.svg',
-              color: Color(0xffd4d4d8),
+              color: AppColors.primaryColor,
               text: 'Profile',
             ),
             selectedIcon: BottomIcon(

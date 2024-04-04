@@ -47,6 +47,7 @@ dependencies:
   intl_phone_field: ^3.2.0
   http: any
   stylish_bottom_bar: ^1.1.0
+  intl: ^0.19.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
@@ -38,11 +37,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
               const SizedBox(height: 40),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                     border: Border.all(width: 1, color: Colors.grey),
                     borderRadius: BorderRadius.circular(10)),
-                child: TextField(
+                child: const TextField(
                   decoration: InputDecoration(
                     hintText: "Email/Phone No",
                     hintStyle: TextStyle(color: Colors.grey),

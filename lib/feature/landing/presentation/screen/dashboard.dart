@@ -12,11 +12,11 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   List<Widget> recentActivities = [
-    RecentActivityCard(isCompleted: true),
-    RecentActivityCard(isCompleted: false),
-    RecentActivityCard(isCompleted: true),
-    RecentActivityCard(isCompleted: false),
-    RecentActivityCard(isCompleted: true),
+    const RecentActivityCard(isCompleted: true),
+    const RecentActivityCard(isCompleted: false),
+    const RecentActivityCard(isCompleted: true),
+    const RecentActivityCard(isCompleted: false),
+    const RecentActivityCard(isCompleted: true),
   ];
 
   @override
