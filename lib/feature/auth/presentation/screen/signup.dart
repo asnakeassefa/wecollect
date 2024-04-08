@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
+import 'package:wecollect/feature/auth/presentation/screen/login.dart';
 
 import '../../../../core/utility/widget/button.dart';
 
@@ -140,7 +141,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     style: TextStyle(fontSize: 16),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const LoginScreen();
+                      }));
+                    },
                     child: const Text(
                       'Login',
                       style: TextStyle(

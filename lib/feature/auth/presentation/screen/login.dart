@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/core/utility/widget/button.dart';
+import 'package:wecollect/feature/auth/presentation/screen/signup.dart';
+import 'package:wecollect/feature/home_page.dart';
+
+import 'forgot.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -82,13 +86,25 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 20),
               GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const ForgotPassword();
+                  }));
+                },
                 child: const Text(
                   'Forgot Password?',
                   style: TextStyle(color: Colors.blue, fontSize: 18),
                 ),
               ),
               const SizedBox(height: 70),
-              CustomButton(onPressed: () {}, text: "LOGIN"),
+              CustomButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const HomePage();
+                    }));
+                  },
+                  text: "LOGIN"),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -98,7 +114,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(fontSize: 16),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const SignupScreen();
+                      }));
+                    },
                     child: const Text(
                       'Register',
                       style: TextStyle(color: Colors.blue, fontSize: 16),

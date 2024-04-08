@@ -18,6 +18,7 @@ class _PickUpHomeState extends State<PickUpHome> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+              automaticallyImplyLeading: false,
               title: Text(
                 'Pick Up Request',
                 style: TextStyle(

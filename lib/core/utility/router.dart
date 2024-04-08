@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wecollect/feature/onboarding/onboarding/screen/welcome.dart';
+
+import '../../feature/onboarding/screen/welcome.dart';
 
 final Map<String, WidgetBuilder> routes = {
   WelcomeScreen.routeName: (context) => const WelcomeScreen(),

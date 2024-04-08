@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
+import 'package:wecollect/feature/notification/presentation/screen/notification.dart';
 
 import '../widget/recent_activity_card.dart';
 
@@ -23,13 +26,14 @@ class _DashBoardState extends State<DashBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         toolbarHeight: 80,
         title: Row(
           children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.menu),
-            ),
+            // IconButton(
+            //   onPressed: () {},
+            //   icon: const Icon(Icons.menu),
+            // ),
             const SizedBox(width: 20),
             const CircleAvatar(
               radius: 28,
@@ -59,7 +63,11 @@ class _DashBoardState extends State<DashBoard> {
           Stack(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return NotificationPage();
+                  }));
+                },
                 icon: Icon(
                   Icons.notifications,
                   color: AppColors.secondaryColor,
@@ -160,9 +168,25 @@ class _DashBoardState extends State<DashBoard> {
               Container(
                 height: MediaQuery.sizeOf(context).height * 0.3,
                 width: MediaQuery.sizeOf(context).width,
+                padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.grey[100],
+                ),
+                child: Stack(
+                  children: [
+                    FlutterMap(
+                        options: MapOptions(
+                          center: LatLng(9.0192, 38.7525),
+                          zoom: 13,
+                        ),
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          )
+                        ]),
+                  ],
                 ),
               ),
               const SizedBox(height: 10),

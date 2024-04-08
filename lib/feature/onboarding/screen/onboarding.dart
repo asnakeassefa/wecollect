@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
-import 'package:wecollect/feature/onboarding/onboarding/screen/welcome.dart';
+import 'package:wecollect/feature/onboarding/screen/welcome.dart';
 
-import '../../../../core/dj/injection.dart';
+import '../../../core/dj/injection.dart';
+import '../../auth/presentation/screen/login.dart';
+import '../../home_page.dart';
 import '../bloc/onboarding_cubit.dart';
 import '../bloc/onboarding_state.dart';
 
@@ -27,11 +29,10 @@ class _OnboardingState extends State<Onboarding> {
         },
         builder: (context, state) {
           if (state is OnboardingLoaded) {
-            // return LoginScreen();
-            return const Scaffold();
+            return LoginScreen();
           } else if (state is UserAuthenticated) {
             // return HomePage();
-            return const Scaffold();
+            return const HomePage();
           } else if (state is OnboardingError) {
             return Center(
               child: Text(state.error),

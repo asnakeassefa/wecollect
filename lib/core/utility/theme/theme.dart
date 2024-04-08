@@ -24,4 +24,5 @@ class AppColors {
   static Color primaryColor = const Color(0xff0E846D);
   static Color secondaryColor = const Color(0xff17BF9E);
   static Color bodyTextColor = const Color(0xff000000);
+  static Color secondaryTitleColor = const Color(0xff575DFB);
 }

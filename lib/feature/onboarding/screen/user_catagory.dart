@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
+import 'package:wecollect/feature/auth/presentation/screen/signup.dart';
 
-import '../../../../core/utility/widget/button.dart';
+import '../../../core/utility/widget/button.dart';
 
 class UserCatagory extends StatefulWidget {
   static String routeName = '/user_catagory';
@@ -128,7 +129,11 @@ class _UserCatagoryState extends State<UserCatagory> {
               const SizedBox(height: 100),
               CustomButton(
                 text: "Next",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const SignupScreen();
+                  }));
+                },
               ),
             ],
           ),

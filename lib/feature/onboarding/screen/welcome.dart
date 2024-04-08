@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
+import 'package:wecollect/feature/auth/presentation/screen/login.dart';
 
 import 'user_catagory.dart';
 
@@ -46,7 +47,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const UserCatagory(newAccount: false);
+                  return const LoginScreen();
                 }));
               },
               style: ElevatedButton.styleFrom(
@@ -63,7 +64,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const UserCatagory(
+                    newAccount: true,
+                  );
+                }));
+              },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(MediaQuery.sizeOf(context).width * 0.75, 50),
                 backgroundColor: Colors.white,

@@ -1,7 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/core/utility/widget/button.dart';
 
@@ -281,9 +281,9 @@ class _PickUpRequestState extends State<PickUpRequest> {
                 children: [
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width * 0.5,
-                    child: TextField(
+                    child: const TextField(
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Enter Weight",
                         hintStyle: TextStyle(color: Colors.grey),
                         border: InputBorder.none,
@@ -292,7 +292,7 @@ class _PickUpRequestState extends State<PickUpRequest> {
                   ),
                   const Spacer(),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         border: Border(
                       left: BorderSide(width: 1, color: Colors.grey),
                     )),
@@ -379,6 +379,22 @@ class _PickUpRequestState extends State<PickUpRequest> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.grey[100],
+              ),
+              child: Stack(
+                children: [
+                  FlutterMap(
+                    options: MapOptions(
+                      center: LatLng(9.0192, 38.7525),
+                      zoom: 13,
+                    ),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      )
+                    ],
+                  ),
+                ],
               ),
             ),
 
