@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
+import 'package:wecollect/feature/requiest_detail/presentation/screen/requiest_detail.dart';
 
 import '../../../track/presentation/screen/track.dart';
 import '../../data/notification_model.dart';
@@ -58,7 +59,7 @@ class NotificationTile extends StatelessWidget {
           leading: Icon(Icons.task_alt, color: Colors.green),
           onTap: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return const TrackDetailPage();
+              return const RequestDetail();
             }));
           },
           title: Text(notificationModel.title),

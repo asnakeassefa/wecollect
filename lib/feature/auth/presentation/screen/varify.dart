@@ -21,9 +21,6 @@ class _VerificationState extends State<Verification> {
               'Verification',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            // Pinput(
-            //   separatorBuilder: (idx) => const SizedBox(width: 8),
-            // ),
           ],
         ),
       ),

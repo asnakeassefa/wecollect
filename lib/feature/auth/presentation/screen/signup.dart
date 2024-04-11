@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/feature/auth/presentation/screen/login.dart';
 
@@ -15,6 +16,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +107,25 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                 ),
+              ),
+              const SizedBox(height: 32),
+              const Text(
+                ' Email',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 8),
+              IntlPhoneField(
+                decoration: InputDecoration(
+                  labelText: 'Phone Number',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(),
+                  ),
+                ),
+                initialCountryCode: 'ET',
+                onChanged: (phone) {
+                  print(phone.completeNumber);
+                },
               ),
               const SizedBox(height: 32),
               const Text(

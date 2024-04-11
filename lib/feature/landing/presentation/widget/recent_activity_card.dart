@@ -4,11 +4,15 @@ import 'package:wecollect/core/utility/theme/theme.dart';
 
 class RecentActivityCard extends StatelessWidget {
   final bool isCompleted;
-  const RecentActivityCard({super.key, required this.isCompleted});
+  Function? onPressed;
+  RecentActivityCard({super.key, this.onPressed, required this.isCompleted});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        if (onPressed != null) onPressed!();
+      },
       child: Container(
         padding: const EdgeInsets.only(left: 4),
         margin: const EdgeInsets.symmetric(vertical: 10),

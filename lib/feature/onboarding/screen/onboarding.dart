@@ -94,7 +94,7 @@ class _PageScrollerState extends State<PageScroller> {
               },
               children: [
                 onboardingPages(
-                    Img: 'assets/svg/onboarding1.svg',
+                    Img: 'assets/images/onboarding1.png',
                     title: 'Welcome to Eskalate',
                     onPressed: () {
                       controller.nextPage(
@@ -104,7 +104,7 @@ class _PageScrollerState extends State<PageScroller> {
                     body:
                         "Find the location of the nearest dustbin in your area"),
                 onboardingPages(
-                    Img: 'assets/svg/onboarding2.svg',
+                    Img: 'assets/images/onboarding5.png',
                     title: 'Build Your Profile',
                     onPressed: () {
                       controller.nextPage(
@@ -114,7 +114,7 @@ class _PageScrollerState extends State<PageScroller> {
                     body:
                         'Discover exciting job opportunities, easily submit applications, and connect with potential employers for a seamless job search experience.'),
                 onboardingPages(
-                    Img: 'assets/svg/onboarding1.svg',
+                    Img: 'assets/images/onboarding3.png',
                     title: 'Take Assessment',
                     onPressed: () {
                       controller.nextPage(
@@ -124,7 +124,17 @@ class _PageScrollerState extends State<PageScroller> {
                     body:
                         'Discover exciting job opportunities, easily submit applications, and connect with potential employers for a seamless job search experience.'),
                 onboardingPages(
-                    Img: 'assets/svg/onboarding2.svg',
+                    Img: 'assets/images/onboarding4.png',
+                    title: 'Get Gob Offer',
+                    onPressed: () {
+                      controller.nextPage(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut);
+                    },
+                    body:
+                        'Discover exciting job opportunities, easily submit applications, and connect with potential employers for a seamless job search experience.'),
+                onboardingPages(
+                    Img: 'assets/images/onboarding5.png',
                     title: 'Get Gob Offer',
                     onPressed: () {
                       controller.nextPage(
@@ -208,7 +218,7 @@ class onboardingPages extends StatelessWidget {
                       height: 300,
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SvgPicture.asset(Img)),
+                      child: Image.asset(Img)),
                   const SizedBox(height: 30),
                   Text(
                     body,

@@ -21,7 +21,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
       iconWidget: CircleAvatar(
         backgroundColor: AppColors.primaryColor,
       ),
-      // subtitle: StepperText("Your order has been placed"),
+      subtitle: StepperText("Your order has been placed"),
       // iconWidget: Container(
       //   padding: const EdgeInsets.all(8),
       //   decoration: const BoxDecoration(
@@ -32,6 +32,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
     StepperData(
       title: StepperText("Verification",
           textStyle: TextStyle(color: AppColors.bodyTextColor)),
+      subtitle: StepperText("Your order is being verified, please wait"),
       iconWidget: CircleAvatar(
         backgroundColor: AppColors.primaryColor,
       ),
@@ -39,6 +40,8 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
     StepperData(
       title: StepperText("confirmation",
           textStyle: TextStyle(color: AppColors.bodyTextColor)),
+      subtitle: StepperText(
+          "Your order has been confirmed, Thank you for your order"),
       iconWidget: const CircleAvatar(
         backgroundColor: Colors.grey,
       ),

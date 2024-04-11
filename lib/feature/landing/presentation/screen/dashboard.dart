@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/feature/notification/presentation/screen/notification.dart';
 
@@ -15,11 +14,11 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   List<Widget> recentActivities = [
-    const RecentActivityCard(isCompleted: true),
-    const RecentActivityCard(isCompleted: false),
-    const RecentActivityCard(isCompleted: true),
-    const RecentActivityCard(isCompleted: false),
-    const RecentActivityCard(isCompleted: true),
+    RecentActivityCard(isCompleted: true),
+    RecentActivityCard(isCompleted: false),
+    RecentActivityCard(isCompleted: true),
+    RecentActivityCard(isCompleted: false),
+    RecentActivityCard(isCompleted: true),
   ];
 
   @override
@@ -175,17 +174,18 @@ class _DashBoardState extends State<DashBoard> {
                 ),
                 child: Stack(
                   children: [
-                    FlutterMap(
-                        options: MapOptions(
-                          center: LatLng(9.0192, 38.7525),
-                          zoom: 13,
-                        ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          )
-                        ]),
+                    GoogleMap(
+                      initialCameraPosition: const CameraPosition(
+                        target: LatLng(51.5, -0.09),
+                        zoom: 11.0,
+                      ),
+                      markers: {
+                        const Marker(
+                            markerId: MarkerId('sourceLocation'),
+                            icon: BitmapDescriptor.defaultMarker,
+                            position: LatLng(51.5, -0.09))
+                      },
+                    ),
                   ],
                 ),
               ),

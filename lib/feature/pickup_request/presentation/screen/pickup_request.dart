@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:latlong2/latlong.dart';
@@ -6,6 +8,7 @@ import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/core/utility/widget/button.dart';
 
 import '../../../../core/utility/refactor/date_formater.dart';
+import 'request_success.dart';
 
 class PickUpRequest extends StatefulWidget {
   const PickUpRequest({super.key});
@@ -394,12 +397,65 @@ class _PickUpRequestState extends State<PickUpRequest> {
                       )
                     ],
                   ),
+                  Positioned(
+                    top: 200,
+                    left: 300,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              showDragHandle: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              isScrollControlled: true,
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height * 0.8,
+                              ),
+                              context: context,
+                              builder: (context) {
+                                return FlutterMap(
+                                  options: MapOptions(
+                                    center: LatLng(9.0192, 38.7525),
+                                    zoom: 13,
+                                  ),
+                                  children: [
+                                    TileLayer(
+                                      urlTemplate:
+                                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.open_in_full_rounded,
+                            color: Colors.white,
+                          )),
+                    ),
+                  )
                 ],
               ),
             ),
 
             const SizedBox(height: 24),
-            CustomButton(onPressed: () {}, text: "Request Pickup"),
+            CustomButton(
+                onPressed: () {
+                  // request pickup
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const RequiestSuccess();
+                  }));
+                },
+                text: "Request Pickup"),
 
             const SizedBox(height: 100),
           ],

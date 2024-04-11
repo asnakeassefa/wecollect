@@ -5,6 +5,7 @@ import 'package:wecollect/core/utility/theme/theme.dart';
 
 import 'landing/presentation/screen/dashboard.dart';
 import 'pickup_request/presentation/screen/pickup_home.dart';
+import 'profile/presentation/screen/profile.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = '/home';
@@ -26,13 +27,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(title: const Text('Jobs')),
       body: const Center(child: Text('will be available soon!!!')),
     ),
-    Scaffold(
-      appBar: AppBar(title: const Text('Alerts')),
-      body: const Center(child: Text('will be available soon!!!')),
-    ),
+    const ProfilePage(),
   ];
 
-  dynamic selected;
+  int selected = 0;
   var heart = false;
 
   @override
