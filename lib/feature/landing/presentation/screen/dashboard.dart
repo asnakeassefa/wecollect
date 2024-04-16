@@ -36,7 +36,7 @@ class _DashBoardState extends State<DashBoard> {
             const SizedBox(width: 20),
             const CircleAvatar(
               radius: 28,
-              backgroundImage: AssetImage('assets/images/ava-character.png'),
+              backgroundImage: AssetImage('assets/images/meron.jpg'),
             ),
             const SizedBox(width: 16),
             Column(
@@ -47,7 +47,7 @@ class _DashBoardState extends State<DashBoard> {
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
                 Text(
-                  'Yohn Doi',
+                  'Meron',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -64,7 +64,7 @@ class _DashBoardState extends State<DashBoard> {
               IconButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return NotificationPage();
+                    return const NotificationPage();
                   }));
                 },
                 icon: Icon(

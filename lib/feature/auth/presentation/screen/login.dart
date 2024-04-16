@@ -8,6 +8,7 @@ import 'package:wecollect/feature/auth/presentation/screen/signup.dart';
 import 'package:wecollect/feature/home_page.dart';
 
 import '../../../../core/dj/injection.dart';
+import '../../../onboarding/screen/user_catagory.dart';
 import 'forgot.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool obscure = true;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -29,9 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
         body: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is AuthSuccess) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
+              Navigator.pushAndRemoveUntil(context,
+                  MaterialPageRoute(builder: (context) {
                 return const HomePage();
-              }));
+              }), (route) => false);
             }
             if (state is AuthError) {
               ScaffoldMessenger.of(context)
@@ -59,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 32),
                     const Text(
-                      ' phone',
+                      ' phone/email',
                       style: TextStyle(fontSize: 18),
                     ),
                     const SizedBox(height: 8),
@@ -93,7 +96,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(10)),
                       child: TextField(
                         controller: _passwordController,
+                        obscureText: obscure,
                         decoration: InputDecoration(
+                          suffix: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                obscure = !obscure;
+                              });
+                            },
+                            icon: Icon(obscure
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                          ),
                           border: InputBorder.none,
                           hintText: "********",
                           hintStyle: const TextStyle(color: Colors.grey),
@@ -137,7 +151,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return const SignupScreen();
+                              return const UserCatagory(
+                                newAccount: true,
+                              );
                             }));
                           },
                           child: const Text(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -31,9 +30,8 @@ class _ProfilePageState extends State<ProfilePage> {
               Center(
                 child: Stack(
                   children: [
-                    CircleAvatar(
-                      backgroundImage:
-                          AssetImage('assets/images/ava-character.png'),
+                    const CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/meron.jpg'),
                       radius: 65,
                     ),
                     Positioned(
@@ -44,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         radius: 20,
                         child: IconButton(
                           onPressed: () {},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.edit_rounded,
                             color: Colors.white,
                           ),
@@ -56,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Yohn Doi',
+                'Meron',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -64,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 10),
-              Text('johndoi@example.com',
+              Text('meron@gmail.com',
                   style: TextStyle(fontSize: 18, color: Colors.grey[400])),
               const SizedBox(height: 24),
               ListTile(

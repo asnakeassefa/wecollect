@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/feature/auth/presentation/screen/login.dart';
+import 'package:wecollect/feature/auth/presentation/screen/otp.dart';
 
 import '../../../../core/utility/widget/button.dart';
 
@@ -17,7 +18,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-
+  bool obscure = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
               const Text(
                 ' Your Name',
                 style: TextStyle(fontSize: 16),
@@ -95,7 +96,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     border: Border.all(width: 1, color: Colors.grey),
                     borderRadius: BorderRadius.circular(10)),
                 child: TextField(
-                  controller: _emailController,
+                  controller: _nameController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: "Ex: John Doe",
@@ -108,9 +109,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
               const Text(
-                ' Email',
+                ' Phone Number',
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 8),
@@ -127,7 +128,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   print(phone.completeNumber);
                 },
               ),
-              const SizedBox(height: 32),
               const Text(
                 ' Password',
                 style: TextStyle(fontSize: 16),
@@ -138,8 +138,19 @@ class _SignupScreenState extends State<SignupScreen> {
                     border: Border.all(width: 1, color: Colors.grey),
                     borderRadius: BorderRadius.circular(10)),
                 child: TextField(
-                  controller: _emailController,
+                  controller: _passwordController,
+                  obscureText: obscure,
                   decoration: InputDecoration(
+                    suffix: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          obscure = !obscure;
+                        });
+                      },
+                      icon: Icon(
+                        obscure ? Icons.visibility : Icons.visibility_off,
+                      ),
+                    ),
                     border: InputBorder.none,
                     hintText: "*********",
                     hintStyle: const TextStyle(color: Colors.grey),
@@ -151,8 +162,15 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 70),
-              CustomButton(onPressed: () {}, text: 'Register'),
+              const SizedBox(height: 24),
+              CustomButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const OtpPage(id: "2332");
+                    }));
+                  },
+                  text: 'Register'),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

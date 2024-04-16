@@ -18,7 +18,7 @@ class RequiestSuccess extends StatelessWidget {
         child: Column(
           // container to with image child
           children: [
-            Container(
+            SizedBox(
               height: MediaQuery.sizeOf(context).height * .5,
               child: Image.asset('assets/images/welcome.png'),
             ),

@@ -39,7 +39,7 @@ class _RequestDetailState extends State<RequestDetail> {
                       TextStyle(fontSize: 24, color: AppColors.secondaryColor)),
               const SizedBox(height: 80),
               const AgentCard(),
-              Spacer(),
+              const Spacer(),
               CustomButton(
                   onPressed: () {
                     Navigator.push(context,

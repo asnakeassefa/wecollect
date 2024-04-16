@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
+import 'Edu/presentation/screen/edu.dart';
 import 'landing/presentation/screen/dashboard.dart';
 import 'pickup_request/presentation/screen/pickup_home.dart';
 import 'profile/presentation/screen/profile.dart';
@@ -23,10 +24,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> bottomBarPages = [
     const DashBoard(),
     const PickUpHome(),
-    Scaffold(
-      appBar: AppBar(title: const Text('Jobs')),
-      body: const Center(child: Text('will be available soon!!!')),
-    ),
+    const Education(),
     const ProfilePage(),
   ];
 
@@ -86,13 +84,13 @@ class _HomePageState extends State<HomePage> {
               title: const Text('Jobs')),
           BottomBarItem(
               icon: BottomIcon(
-                imageName: 'assets/icons/trash.svg',
+                imageName: 'assets/icons/document.svg',
                 color: AppColors.primaryColor,
                 text: 'Alert',
               ),
               selectedIcon: BottomIcon(
                 color: AppColors.primaryColor,
-                imageName: 'assets/icons/trash_f.svg',
+                imageName: 'assets/icons/document_f.svg',
                 text: 'Alert',
               ),
               // backgroundColor: Colors.,

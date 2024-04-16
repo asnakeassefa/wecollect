@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
 import '../../../landing/presentation/widget/recent_activity_card.dart';
-import '../../../track/presentation/screen/track.dart';
 
 class PickUpHistory extends StatefulWidget {
   const PickUpHistory({super.key});
@@ -34,34 +33,34 @@ class _PickUpHistoryState extends State<PickUpHistory> {
             context: context,
             builder: (context) {
               return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DetailNote(
+                    const DetailNote(
                       text1: 'Date and Time: ',
                       child: Text(' April 10 , 2024, 10:43 AM',
-                          style: const TextStyle(fontSize: 18)),
+                          style: TextStyle(fontSize: 18)),
                     ),
-                    DetailNote(
+                    const DetailNote(
                       text1: 'Agent Name: ',
                       child: Text(' John Doe',
-                          style: const TextStyle(fontSize: 18)),
+                          style: TextStyle(fontSize: 18)),
                     ),
-                    DetailNote(
+                    const DetailNote(
                       text1: 'Reedamble Points: ',
-                      child: Text(' +10', style: const TextStyle(fontSize: 18)),
+                      child: Text(' +10', style: TextStyle(fontSize: 18)),
                     ),
                     DetailNote(
                       text1: 'Status: ',
                       child: Container(
-                        padding: EdgeInsets.all(5),
-                        child: Text('Completed',
-                            style: const TextStyle(fontSize: 18)),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           color: AppColors.secondaryColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
+                        child: const Text('Completed',
+                            style: TextStyle(fontSize: 18)),
                       ),
                     ),
                     const DetailNote(
@@ -69,10 +68,10 @@ class _PickUpHistoryState extends State<PickUpHistory> {
                       child: Column(
                         children: [
                           Text('Plastic Collection: 10kg',
-                              style: const TextStyle(fontSize: 18)),
+                              style: TextStyle(fontSize: 18)),
                           SizedBox(height: 24),
                           Text('CO2 Emissions Reduced: 5kg',
-                              style: const TextStyle(fontSize: 18)),
+                              style: TextStyle(fontSize: 18)),
                         ],
                       ),
                     ),
@@ -112,10 +111,10 @@ class _PickUpHistoryState extends State<PickUpHistory> {
     ];
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            Text(
+            const Text(
               'Pick Up History',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
@@ -145,7 +144,7 @@ class DetailNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Wrap(
         children: [
           Text(

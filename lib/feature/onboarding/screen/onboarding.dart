@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/feature/onboarding/screen/welcome.dart';
@@ -29,7 +28,7 @@ class _OnboardingState extends State<Onboarding> {
         },
         builder: (context, state) {
           if (state is OnboardingLoaded) {
-            return LoginScreen();
+            return const LoginScreen();
           } else if (state is UserAuthenticated) {
             // return HomePage();
             return const HomePage();
@@ -148,7 +147,7 @@ class _PageScrollerState extends State<PageScroller> {
           ),
           SmoothPageIndicator(
             controller: controller,
-            count: 4,
+            count: 5,
             onDotClicked: (index) => controller.animateToPage(index,
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOut),
@@ -164,7 +163,7 @@ class _PageScrollerState extends State<PageScroller> {
           const SizedBox(height: 32),
           ElevatedButton(
             onPressed: () {
-              idx == 3
+              idx == 4
                   ? Navigator.pushNamed(context, WelcomeScreen.routeName)
                   : controller.nextPage(
                       duration: const Duration(milliseconds: 500),
@@ -178,7 +177,7 @@ class _PageScrollerState extends State<PageScroller> {
               ),
               minimumSize: Size(MediaQuery.sizeOf(context).width * 0.8, 50),
             ),
-            child: Text(idx == 3 ? "Get Stated" : "Next",
+            child: Text(idx == 4 ? "Get Stated" : "Next",
                 style: const TextStyle(color: Colors.white, fontSize: 16)),
           ),
         ],

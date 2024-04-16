@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/feature/auth/presentation/screen/signup.dart';
 
@@ -15,6 +14,8 @@ class UserCatagory extends StatefulWidget {
 }
 
 class _UserCatagoryState extends State<UserCatagory> {
+  Color selectedColor1 = AppColors.primaryColor;
+  Color selectedColor2 = AppColors.primaryColor;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,68 +61,94 @@ class _UserCatagoryState extends State<UserCatagory> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    width: MediaQuery.sizeOf(context).width * .43,
-                    height: MediaQuery.sizeOf(context).height * .3,
-                    decoration: BoxDecoration(
-                      border:
-                          Border.all(width: 2, color: AppColors.secondaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          width: 87,
-                          height: 97,
-                          'assets/svg/onboarding2.svg',
-                        ),
-                        const Text(
-                          'Initiate Trash Collection',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xff8185FC),
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'For users who wish to request trash collection.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (selectedColor1 == Colors.red) {
+                          selectedColor1 = AppColors.primaryColor;
+                        } else {
+                          if (selectedColor2 == Colors.red) {
+                            selectedColor2 = AppColors.primaryColor;
+                          }
+                          selectedColor1 = Colors.red;
+                        }
+                      });
+                    },
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width * .43,
+                      height: MediaQuery.sizeOf(context).height * .3,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: selectedColor1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            width: 87,
+                            height: 97,
+                            'assets/images/onboarding5.png',
+                          ),
+                          const Text(
+                            'Initiate Trash Collection',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xff8185FC),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'For users who wish to request trash collection.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.sizeOf(context).width * .4,
-                    height: MediaQuery.sizeOf(context).height * .3,
-                    decoration: BoxDecoration(
-                      border:
-                          Border.all(width: 2, color: AppColors.secondaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      children: [
-                        SvgPicture.asset(
-                          width: 87,
-                          height: 97,
-                          'assets/svg/onboarding2.svg',
-                        ),
-                        const Text(
-                          'Conduct Waste Collection',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color(0xff8185FC),
-                              fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'For agents responsible for collecting plastic waste.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (selectedColor2 == Colors.red) {
+                          selectedColor2 = AppColors.primaryColor;
+                        } else {
+                          if (selectedColor1 == Colors.red) {
+                            selectedColor1 = AppColors.primaryColor;
+                          }
+                          selectedColor2 = Colors.red;
+                        }
+                      });
+                    },
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width * .4,
+                      height: MediaQuery.sizeOf(context).height * .3,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 2, color: selectedColor2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            width: 87,
+                            height: 97,
+                            'assets/images/onboarding4.png',
+                          ),
+                          const Text(
+                            'Conduct Waste Collection',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Color(0xff8185FC),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'For agents responsible for collecting plastic waste.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

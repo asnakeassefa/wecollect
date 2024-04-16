@@ -32,7 +32,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            SizedBox(child: SvgPicture.asset('assets/svg/welcome.svg')),
+            SizedBox(child: Image.asset('assets/images/onboarding4.png')),
             const SizedBox(height: 24),
             const Text(
               "Let's Clean our Place with",

@@ -22,12 +22,12 @@ class RecentActivityCard extends StatelessWidget {
         ),
         child: Container(
           width: MediaQuery.sizeOf(context).width * 0.97,
-          height: 80,
+          height: 70,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.grey[200],
-          ),
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 1)]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -40,8 +40,8 @@ class RecentActivityCard extends StatelessWidget {
                   const Text(
                     "Garbage Collected",
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -52,11 +52,11 @@ class RecentActivityCard extends StatelessWidget {
                       children: [
                         Text(
                           "Date: 02/03/2023",
-                          style: TextStyle(fontSize: 13),
+                          style: TextStyle(fontSize: 12),
                         ),
                         Text(
                           'Time: 12:00 PM',
-                          style: TextStyle(fontSize: 13),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
