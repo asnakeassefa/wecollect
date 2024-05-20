@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
+
+import '../../../auth/presentation/screen/login.dart';
+import '../../../reward/presentation/screen/reward_page.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -9,6 +13,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  FlutterSecureStorage _storage = FlutterSecureStorage();
+
+  Future<void> _clearUserData() async {
+    // Clear any user data you may have stored (e.g., tokens, user info)
+    // Example for using secure storage, adjust as needed
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,6 +90,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 trailing: const Icon(Icons.arrow_forward_ios),
               ),
               ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, RewardScreen.routeName);
+                },
                 leading: CircleAvatar(
                   backgroundColor: AppColors.primaryColor.withOpacity(.1),
                   child: Icon(
@@ -135,6 +149,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: AppColors.primaryColor,
                   ),
                 ),
+                onTap: () async {
+                  // clear all login information from the secure storage
+                  // and go to login screen
+                  await _storage.delete(
+                    key: 'accessToken',
+                  );
+                  await _storage.delete(
+                    key: 'refreshToken',
+                  );
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, LoginScreen.routeName, (route) => false);
+                },
                 title: const Text('Logout'),
                 subtitle: const Text('Further secure your account for safety',
                     style: TextStyle(color: Colors.grey)),

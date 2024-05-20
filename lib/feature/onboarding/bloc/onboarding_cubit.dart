@@ -1,27 +1,26 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
-import '../../../core/utility/Request/local_datasource.dart';
 import 'onboarding_state.dart';
 
 @injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
   OnboardingCubit() : super((OnboardingInit()));
-
+  FlutterSecureStorage _storage = FlutterSecureStorage();
   void isLoaded() async {
     emit(OnboardingLoading());
     try {
-      final authenticated =
-          await LocalDataSource.readFromStorage('accessToken');
-      if (authenticated != null) {
+      final authenticated = await _storage.containsKey(key: 'accessToken');
+      if (authenticated) {
         emit((UserAuthenticated()));
         return;
       }
-      final onboarding = await LocalDataSource.readFromStorage('onboarding');
-      if (onboarding != null) {
+      final onboarding = await _storage.containsKey(key: 'onboarding');
+      if (onboarding) {
         emit(OnboardingLoaded());
         return;
       }
-      await LocalDataSource.writeToStorage('onboarding', 'true');
+      await _storage.write(key: 'onboarding', value: 'true');
       emit(OnboardingStarted());
     } catch (e) {
       emit(OnboardingError(error: e.toString()));

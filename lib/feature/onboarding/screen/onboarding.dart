@@ -30,7 +30,6 @@ class _OnboardingState extends State<Onboarding> {
           if (state is OnboardingLoaded) {
             return const LoginScreen();
           } else if (state is UserAuthenticated) {
-            // return HomePage();
             return const HomePage();
           } else if (state is OnboardingError) {
             return Center(

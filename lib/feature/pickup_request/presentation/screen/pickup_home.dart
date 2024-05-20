@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
+import '../../../../core/dj/injection.dart';
+import '../bloc/request_bloc.dart';
 import 'pickup_history.dart';
 import 'pickup_request.dart';
 
@@ -16,44 +19,47 @@ class _PickUpHomeState extends State<PickUpHome> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-          appBar: AppBar(
-              automaticallyImplyLeading: false,
-              title: Text(
-                'Pick Up Request',
-                style: TextStyle(
-                  color: AppColors.secondaryColor,
-                  fontWeight: FontWeight.bold,
+      child: BlocProvider(
+        create: (context) => getIt<RequestCubit>(),
+        child: Scaffold(
+            appBar: AppBar(
+                automaticallyImplyLeading: false,
+                title: Text(
+                  'Pick Up Request',
+                  style: TextStyle(
+                    color: AppColors.secondaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              centerTitle: true,
-              bottom: TabBar(
-                indicatorColor: AppColors.primaryColor,
-                tabs: const [
-                  Tab(
-                    child: Text(
-                      'Pick Up Request',
-                      style: TextStyle(
-                        fontSize: 16,
+                centerTitle: true,
+                bottom: TabBar(
+                  indicatorColor: AppColors.primaryColor,
+                  tabs: const [
+                    Tab(
+                      child: Text(
+                        'Pick Up Request',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Pick Up History',
-                      style: TextStyle(
-                        fontSize: 16,
+                    Tab(
+                      child: Text(
+                        'Pick Up History',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              )),
-          body: const TabBarView(
-            children: [
-              PickUpRequest(),
-              PickUpHistory(),
-            ],
-          )),
+                  ],
+                )),
+            body: const TabBarView(
+              children: [
+                PickUpRequest(),
+                PickUpHistory(),
+              ],
+            )),
+      ),
     );
   }
 }

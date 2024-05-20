@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
 import '../../../landing/presentation/widget/recent_activity_card.dart';
+import '../bloc/request_bloc.dart';
+import '../bloc/request_state.dart';
 
 class PickUpHistory extends StatefulWidget {
   const PickUpHistory({super.key});
@@ -16,6 +19,9 @@ class _PickUpHistoryState extends State<PickUpHistory> {
     List<Widget> recentActivities = [
       RecentActivityCard(
         isCompleted: true,
+        date: '2024-12-12',
+        time: '12:00 AM',
+        title: "Plastic Collected",
         onPressed: () {
           // Show the bottom sheet
           showModalBottomSheet(
@@ -44,8 +50,7 @@ class _PickUpHistoryState extends State<PickUpHistory> {
                     ),
                     const DetailNote(
                       text1: 'Agent Name: ',
-                      child: Text(' John Doe',
-                          style: TextStyle(fontSize: 18)),
+                      child: Text(' John Doe', style: TextStyle(fontSize: 18)),
                     ),
                     const DetailNote(
                       text1: 'Reedamble Points: ',
@@ -104,30 +109,60 @@ class _PickUpHistoryState extends State<PickUpHistory> {
           );
         },
       ),
-      RecentActivityCard(isCompleted: false),
-      RecentActivityCard(isCompleted: true),
-      RecentActivityCard(isCompleted: false),
-      RecentActivityCard(isCompleted: true),
-    ];
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: [
-            const Text(
-              'Pick Up History',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 24),
-            Column(
-              children: recentActivities.map((recentActivityCard) {
-                return recentActivityCard;
-              }).toList(),
-            ),
-            const SizedBox(height: 70),
-          ],
-        ),
+      // RecentActivityCard(isCompleted: false),
+      RecentActivityCard(
+        isCompleted: true,
+        date: '2024-12-12',
+        time: '12:00 AM',
+        title: "Plastic Collected",
       ),
+      RecentActivityCard(
+        isCompleted: true,
+        date: '2024-12-12',
+        time: '12:00 AM',
+        title: "Plastic Collected",
+      ),
+      RecentActivityCard(
+        isCompleted: true,
+        date: '2024-12-12',
+        time: '12:00 AM',
+        title: "Plastic Collected",
+      ),
+    ];
+    return BlocConsumer<RequestCubit, RequestState>(
+      listener: (context, state) {
+        if (state is RequestError) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      builder: (context, state) {
+        if (state is RequestLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is RequestLoaded) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  const Text(
+                    'Pick Up History',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 24),
+                  Column(
+                    children: recentActivities.map((recentActivityCard) {
+                      return recentActivityCard;
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 70),
+                ],
+              ),
+            ),
+          );
+        }
+        return Container();
+      },
     );
   }
 }

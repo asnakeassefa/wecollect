@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/auth_repostiory.dart';
@@ -9,23 +11,22 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit(this.authRepository) : super(AuthInitial());
 
-  void login(String email, String password) async {
+  void login(Map<String, String> loginInfo) async {
     emit(AuthLoading());
     try {
-      // final user = await authRepository.login(email, password);
-
-      emit(AuthSuccess("Login Successful"));
+      log(loginInfo.toString());
+      final user = await authRepository.login(loginInfo);
+      emit(AuthSuccess("Login Successfully"));
     } on Exception catch (e) {
       emit(AuthError(e.toString()));
     }
   }
 
-  void register(String email, String password) async {
+  void register(Map<String, String> userInfo) async {
     emit(AuthLoading());
     try {
-      Map<String, String> userInfo = {"email": email, "password": password};
-      // final user = await authRepository.signup(userInfo);
-      emit(AuthSuccess("Registration Successful"));
+      final user = await authRepository.signup(userInfo);
+      emit(AuthSuccess("You Registerd Successfully"));
     } on Exception catch (e) {
       emit(AuthError(e.toString()));
     }

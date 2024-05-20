@@ -14,8 +14,8 @@ class UserCatagory extends StatefulWidget {
 }
 
 class _UserCatagoryState extends State<UserCatagory> {
-  Color selectedColor1 = AppColors.primaryColor;
-  Color selectedColor2 = AppColors.primaryColor;
+  int selected = 0;
+  List<String> role = ['client', 'agent'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,21 +64,18 @@ class _UserCatagoryState extends State<UserCatagory> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        if (selectedColor1 == Colors.red) {
-                          selectedColor1 = AppColors.primaryColor;
-                        } else {
-                          if (selectedColor2 == Colors.red) {
-                            selectedColor2 = AppColors.primaryColor;
-                          }
-                          selectedColor1 = Colors.red;
-                        }
+                        selected = 0;
                       });
                     },
                     child: Container(
                       width: MediaQuery.sizeOf(context).width * .43,
                       height: MediaQuery.sizeOf(context).height * .3,
                       decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: selectedColor1),
+                        border: Border.all(
+                            width: 2,
+                            color: selected == 0
+                                ? AppColors.primaryColor
+                                : Colors.grey.withOpacity(0.4)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
@@ -109,21 +106,18 @@ class _UserCatagoryState extends State<UserCatagory> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        if (selectedColor2 == Colors.red) {
-                          selectedColor2 = AppColors.primaryColor;
-                        } else {
-                          if (selectedColor1 == Colors.red) {
-                            selectedColor1 = AppColors.primaryColor;
-                          }
-                          selectedColor2 = Colors.red;
-                        }
+                        selected = 1;
                       });
                     },
                     child: Container(
                       width: MediaQuery.sizeOf(context).width * .4,
                       height: MediaQuery.sizeOf(context).height * .3,
                       decoration: BoxDecoration(
-                        border: Border.all(width: 2, color: selectedColor2),
+                        border: Border.all(
+                            width: 2,
+                            color: selected == 1
+                                ? AppColors.primaryColor
+                                : Colors.grey.withOpacity(0.4)),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
@@ -158,7 +152,9 @@ class _UserCatagoryState extends State<UserCatagory> {
                 text: "Next",
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const SignupScreen();
+                    return SignupScreen(
+                      role: role[selected],
+                    );
                   }));
                 },
               ),

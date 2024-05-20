@@ -4,8 +4,17 @@ import 'package:wecollect/core/utility/theme/theme.dart';
 
 class RecentActivityCard extends StatelessWidget {
   final bool isCompleted;
+  final String title;
+  final String date;
+  final String time;
   Function? onPressed;
-  RecentActivityCard({super.key, this.onPressed, required this.isCompleted});
+  RecentActivityCard(
+      {super.key,
+      this.onPressed,
+      required this.isCompleted,
+      required this.title,
+      required this.time,
+      required this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +36,7 @@ class RecentActivityCard extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
-              boxShadow: [BoxShadow(color: Colors.grey, blurRadius: 1)]),
+              boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 1)]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -37,9 +46,9 @@ class RecentActivityCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Garbage Collected",
-                    style: TextStyle(
+                  Text(
+                    title,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -47,16 +56,16 @@ class RecentActivityCard extends StatelessWidget {
                   const SizedBox(height: 10),
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width * 0.64,
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Date: 02/03/2023",
-                          style: TextStyle(fontSize: 12),
+                          'Date: $date',
+                          style: const TextStyle(fontSize: 12),
                         ),
                         Text(
-                          'Time: 12:00 PM',
-                          style: TextStyle(fontSize: 12),
+                          'Time: $time',
+                          style: const TextStyle(fontSize: 12),
                         ),
                       ],
                     ),

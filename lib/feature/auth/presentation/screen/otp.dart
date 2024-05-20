@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
+import 'package:wecollect/feature/auth/presentation/screen/signup.dart';
 
 import '../../../../core/dj/injection.dart';
 import '../../../../core/utility/widget/button.dart';
@@ -24,8 +25,7 @@ class _OtpPageState extends State<OtpPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<AuthCubit>()
-        ..login("ama", "password"), // Add the missing argument here
+      create: (context) => getIt<AuthCubit>(), // Add the missing argument here
       child: Scaffold(
         appBar: AppBar(),
         body: BlocConsumer<AuthCubit, AuthState>(
@@ -39,7 +39,7 @@ class _OtpPageState extends State<OtpPage> {
 
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) {
-                return LoginScreen();
+                return const LoginScreen();
               }), (route) => false);
             }
           },

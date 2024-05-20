@@ -3,7 +3,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/feature/notification/presentation/screen/notification.dart';
 
-import '../widget/recent_activity_card.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -14,11 +13,11 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   List<Widget> recentActivities = [
-    RecentActivityCard(isCompleted: true),
-    RecentActivityCard(isCompleted: false),
-    RecentActivityCard(isCompleted: true),
-    RecentActivityCard(isCompleted: false),
-    RecentActivityCard(isCompleted: true),
+    // RecentActivityCard(isCompleted: true),
+    // RecentActivityCard(isCompleted: false),
+    // RecentActivityCard(isCompleted: true),
+    // RecentActivityCard(isCompleted: false),
+    // RecentActivityCard(isCompleted: true),
   ];
 
   @override

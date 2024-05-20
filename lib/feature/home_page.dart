@@ -4,7 +4,7 @@ import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
 import 'Edu/presentation/screen/edu.dart';
-import 'landing/presentation/screen/dashboard.dart';
+import 'landing/presentation/screen/agent_dashboard.dart';
 import 'pickup_request/presentation/screen/pickup_home.dart';
 import 'profile/presentation/screen/profile.dart';
 
@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   PageController pageController = PageController();
 
   final List<Widget> bottomBarPages = [
-    const DashBoard(),
+    const AgentDashBoard(),
     const PickUpHome(),
     const Education(),
     const ProfilePage(),
