@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
 class RecentActivityCard extends StatelessWidget {
-  final bool isCompleted;
+  final String status;
   final String title;
   final String date;
   final String time;
@@ -11,7 +11,7 @@ class RecentActivityCard extends StatelessWidget {
   RecentActivityCard(
       {super.key,
       this.onPressed,
-      required this.isCompleted,
+      required this.status,
       required this.title,
       required this.time,
       required this.date});
@@ -27,7 +27,7 @@ class RecentActivityCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: isCompleted ? AppColors.secondaryColor : Colors.red,
+          color: status == "success" ? AppColors.secondaryColor :status == 'pending'? Colors.orange: Colors.red,
         ),
         child: Container(
           width: MediaQuery.sizeOf(context).width * 0.97,

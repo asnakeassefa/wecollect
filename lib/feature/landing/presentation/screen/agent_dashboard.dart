@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../../core/dj/injection.dart';
 import '../../../../core/utility/theme/theme.dart';
+import '../../../auth/presentation/screen/login.dart';
 import '../../../notification/presentation/screen/notification.dart';
 import '../bloc/dashboard_bloc.dart';
 import '../bloc/dashboard_state.dart';
@@ -20,7 +24,23 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
   // List<Widget> recentActivities = [
   //   RecentActivityCard(isCompleted: true),
   // ];
+  late String userName = "";
+  late String profileImage = "";
+  void getUserId() async {
+    var _storage = FlutterSecureStorage();
+    String? name = await _storage.read(key: 'name');
+    String? profile = await _storage.read(key: 'profile_photo');
+    log(profile.toString());
+    setState(() {
+      userName = name??"";
+      profileImage = profile??"";
+    });
+  }
 
+  void initState() {
+    super.initState();
+    getUserId();
+  }
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -36,9 +56,9 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
               //   icon: const Icon(Icons.menu),
               // ),
               const SizedBox(width: 20),
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 28,
-                backgroundImage: AssetImage('assets/images/meron.jpg'),
+                backgroundImage: NetworkImage(profileImage),
               ),
               const SizedBox(width: 16),
               Column(
@@ -49,7 +69,7 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   Text(
-                    'Meron',
+                    userName,
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -106,7 +126,17 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
         ),
         body: BlocConsumer<DashboardCubit, DashboardState>(
           listener: (context, state) {
-            // TODO: implement listener
+            if(state is DashboardError && state.message.contains('token')){
+              // navigate to login page
+              Navigator.push(context,MaterialPageRoute(builder: (context){
+                return const LoginScreen();
+              }));
+            } else if(state is DashboardError){
+              // show error message
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(state.message),
+              ));
+            }
           },
           builder: (context, state) {
             if (state is DashboardLoading) {
@@ -184,11 +214,10 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
                         children:
                             state.recentActivity.map((recentActivityCard) {
                           return RecentActivityCard(
-                            date: recentActivityCard['date'] ?? "",
-                            title: recentActivityCard['title'] ?? "",
-                            time: recentActivityCard['time'] ?? "",
-                            isCompleted:
-                                recentActivityCard['status'] == 'success',
+                            date: recentActivityCard.requestDate ?? "",
+                            title: recentActivityCard.wastePlasticType ?? "",
+                            time: recentActivityCard.requestTime?? "",
+                            status:recentActivityCard.pickUpStatus ?? "",
                           );
                         }).toList(),
                       ),
@@ -198,79 +227,20 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
                 ),
               );
             }
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ReportCard(
-                          boxDecoration: BoxDecoration(
-                              color: AppColors.primaryColor,
-                              borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  topLeft: Radius.circular(10))),
-                          icon: 'assets/icons/coins.svg',
-                          title: 'Redeemable Points',
-                          value: '200',
-                        ),
-                        ReportCard(
-                          boxDecoration: BoxDecoration(
-                              color: AppColors.secondaryColor,
-                              borderRadius: const BorderRadius.only(
-                                  bottomRight: Radius.circular(10),
-                                  topRight: Radius.circular(10))),
-                          icon: 'assets/icons/carbon.svg',
-                          title: 'CO2 Reduced',
-                          value: '1.2KG',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ReportCard(
-                          boxDecoration: BoxDecoration(
-                              color: AppColors.secondaryColor,
-                              borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  topLeft: Radius.circular(10))),
-                          icon: 'assets/icons/weight.svg',
-                          title: 'Weight Collected',
-                          value: '2000KG',
-                        ),
-                        ReportCard(
-                          boxDecoration: BoxDecoration(
-                              color: AppColors.primaryColor,
-                              borderRadius: const BorderRadius.only(
-                                  bottomRight: Radius.circular(10),
-                                  topRight: Radius.circular(10))),
-                          icon: 'assets/icons/recycle.svg',
-                          title: 'Recycled Plastics',
-                          value: '10000',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      'Recent Activities',
-                      style: TextStyle(
-                          color: AppColors.secondaryColor, fontSize: 16),
-                    ),
-                    const SizedBox(height: 24),
-                    // Column(
-                    //   children: recentActivities.map((recentActivityCard) {
-                    //     return recentActivityCard;
-                    //   }).toList(),
-                    // ),
-                    const SizedBox(height: 70),
-                  ],
-                ),
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('Failed to load data'),
+              // retry button here to call the cubit again
+              ElevatedButton(
+                onPressed: () {
+                  context.read<DashboardCubit>().getDashboard();
+                },
+                child: const Text('Retry'),
+              ),
+                ],
               ),
             );
           },

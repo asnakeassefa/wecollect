@@ -16,15 +16,9 @@ class PickUpHistory extends StatefulWidget {
 class _PickUpHistoryState extends State<PickUpHistory> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> recentActivities = [
-      RecentActivityCard(
-        isCompleted: true,
-        date: '2024-12-12',
-        time: '12:00 AM',
-        title: "Plastic Collected",
-        onPressed: () {
-          // Show the bottom sheet
-          showModalBottomSheet(
+
+    Future requestDetail(){
+      return showModalBottomSheet(
             showDragHandle: true,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
@@ -106,29 +100,8 @@ class _PickUpHistoryState extends State<PickUpHistory> {
                 ),
               );
             },
-          );
-        },
-      ),
-      // RecentActivityCard(isCompleted: false),
-      RecentActivityCard(
-        isCompleted: true,
-        date: '2024-12-12',
-        time: '12:00 AM',
-        title: "Plastic Collected",
-      ),
-      RecentActivityCard(
-        isCompleted: true,
-        date: '2024-12-12',
-        time: '12:00 AM',
-        title: "Plastic Collected",
-      ),
-      RecentActivityCard(
-        isCompleted: true,
-        date: '2024-12-12',
-        time: '12:00 AM',
-        title: "Plastic Collected",
-      ),
-    ];
+          );   
+    } 
     return BlocConsumer<RequestCubit, RequestState>(
       listener: (context, state) {
         if (state is RequestError) {
@@ -151,8 +124,16 @@ class _PickUpHistoryState extends State<PickUpHistory> {
                   ),
                   const SizedBox(height: 24),
                   Column(
-                    children: recentActivities.map((recentActivityCard) {
-                      return recentActivityCard;
+                    children: state.requests.map((recentActivityCard) {
+                      return RecentActivityCard(
+                        status: recentActivityCard.pickUpStatus??"",
+                        date: recentActivityCard.requestDate??"",
+                        time: recentActivityCard.requestTime??"",
+                        title: recentActivityCard.wastePlasticType??"",
+                        onPressed: (){
+                          requestDetail();
+                        },
+                      );
                     }).toList(),
                   ),
                   const SizedBox(height: 70),

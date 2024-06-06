@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/core/utility/widget/button.dart';
 
@@ -21,12 +23,61 @@ class _PickUpRequestState extends State<PickUpRequest> {
   final TextEditingController _dateController =
       TextEditingController(text: formatCustomDate(DateTime.now()));
   DateTime dateTime = DateTime.now();
+  final Completer<GoogleMapController> _controller = Completer();
 
   int hourValue = 1;
   int minuteValue = 0;
   String amPm = 'AM';
   String weightUnit = 'kg';
   bool useCurrentLocation = false;
+  LocationData? currentLocation;
+
+  void getCurrentPosition() async {
+    Location location = Location();
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    location.getLocation().then((value) {
+      currentLocation = value;
+      setState(() {});
+    });
+    GoogleMapController googleMapController = await _controller.future;
+
+    location.onLocationChanged.listen((LocationData currentLocation) {
+      this.currentLocation = currentLocation;
+
+      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+          zoom: 14.4746,
+        ),
+      ));
+      setState(() {});
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentPosition();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<RequestCubit, RequestState>(
@@ -411,18 +462,31 @@ class _PickUpRequestState extends State<PickUpRequest> {
                   ),
                   child: Stack(
                     children: [
-                      FlutterMap(
-                        options: const MapOptions(
-                          center: LatLng(9.0192, 38.7525),
-                          zoom: 13,
-                        ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          )
-                        ],
-                      ),
+                      currentLocation == null
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : GoogleMap(
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(currentLocation!.latitude!,
+                                    currentLocation!.longitude!),
+                                zoom: 14.4746,
+                              ),
+                              markers: {
+                                Marker(
+                                  markerId: const MarkerId('Current Loacation'),
+                                  position: LatLng(currentLocation!.latitude!,
+                                      currentLocation!.longitude!),
+                                  infoWindow: const InfoWindow(
+                                      title: 'Current Location'),
+                                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                                    BitmapDescriptor.hueViolet,
+                                  ),
+                                ),
+                              },
+                              onMapCreated: (controller) {
+                                _controller.complete(controller);
+                              }),
                       Positioned(
                         top: 200,
                         left: 300,
@@ -449,18 +513,31 @@ class _PickUpRequestState extends State<PickUpRequest> {
                                   ),
                                   context: context,
                                   builder: (context) {
-                                    return FlutterMap(
-                                      options: const MapOptions(
-                                        center: LatLng(9.0192, 38.7525),
-                                        zoom: 13,
-                                      ),
-                                      children: [
-                                        TileLayer(
-                                          urlTemplate:
-                                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                        )
-                                      ],
-                                    );
+                                    return GoogleMap(
+                                        initialCameraPosition: CameraPosition(
+                                          target: LatLng(
+                                              currentLocation!.latitude!,
+                                              currentLocation!.longitude!),
+                                          zoom: 14.4746,
+                                        ),
+                                        markers: {
+                                          Marker(
+                                            markerId: const MarkerId(
+                                                'Current Loacation'),
+                                            position: LatLng(
+                                                currentLocation!.latitude!,
+                                                currentLocation!.longitude!),
+                                            infoWindow: const InfoWindow(
+                                                title: 'Current Location'),
+                                            icon: BitmapDescriptor
+                                                .defaultMarkerWithHue(
+                                              BitmapDescriptor.hueViolet,
+                                            ),
+                                          ),
+                                        },
+                                        onMapCreated: (controller) {
+                                          _controller.complete(controller);
+                                        });
                                   },
                                 );
                               },
@@ -476,16 +553,26 @@ class _PickUpRequestState extends State<PickUpRequest> {
 
                 const SizedBox(height: 24),
                 CustomButton(
+                    isLoading: state is RequestLoading,
                     onPressed: () {
                       // request pickup
-                      context.read<RequestCubit>().createRequest({
-                        'date': formatCustomDate(dateTime),
-                        'time': '$hourValue:$minuteValue $amPm',
-                        'weight': '1 $weightUnit',
-                        'location': 'Addis Ababa',
-                        'latitude': '9.0192',
-                        'longitude': '38.7525',
-                      });
+                      context.read<RequestCubit>().createRequest(
+                          // {
+                          // 'date': formatCustomDate(dateTime),
+                          // 'time': '$hourValue:$minuteValue $amPm',
+                          // 'weight': '1 $weightUnit',
+                          // 'latitude': '9.0192',
+                          // 'longitude': '38.7525',
+                          // }
+                          {
+                            "requestor": 1,
+                            "wastePlastic_type": "plastic",
+                            "wastePlastic_size": 10,
+                            "wastePlastic_address": "AA",
+                            "unique_location": "koshe",
+                            "latitude": 8.32526,
+                            "longitude": 39.5346
+                          });
                     },
                     text: "Request Pickup"),
 

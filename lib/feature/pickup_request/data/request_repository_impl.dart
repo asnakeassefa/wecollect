@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:injectable/injectable.dart';
 import '../../../core/network/api_provider.dart';
 import '../../../core/network/endpoints.dart';
+import '../../landing/data/recent_activity_model.dart';
 import '../domain/request_repository.dart';
+import 'request_data_model.dart';
 
 @Injectable(as: RequestRepository)
 class RequestRepositoryImp implements RequestRepository {
@@ -20,7 +24,7 @@ class RequestRepositoryImp implements RequestRepository {
   }
 
   @override
-  Future<String> createRequest(Map<String, String> request) async {
+  Future<String> createRequest(Map<String, dynamic> request) async {
     try {
       String url = Endpoints.request;
       final response = await api.post(url, request);
@@ -47,9 +51,22 @@ class RequestRepositoryImp implements RequestRepository {
   }
 
   @override
-  Future<List> getRequests() {
-    // TODO: implement getRequests
-    throw UnimplementedError();
+  Future<List<Data>> getRequests() async{
+    try {
+      final url = Endpoints.recentActivity;
+
+      final response = await api.get(url);
+      log(response.data.toString());
+      if (response.statusCode == 200) {
+        ActivityModel res = ActivityModel.fromJson(response.data);
+        return res.data ?? [];
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 
   @override

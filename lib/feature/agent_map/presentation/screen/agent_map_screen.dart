@@ -9,7 +9,9 @@ import 'package:wecollect/core/data/constant.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
 class AgentMap extends StatefulWidget {
-  const AgentMap({super.key});
+  final LatLng source;
+  final LatLng destination;
+  const AgentMap({super.key, required this.source, required this.destination});
 
   @override
   State<AgentMap> createState() => _AgentMapState();
@@ -21,8 +23,9 @@ class _AgentMapState extends State<AgentMap> {
   List<LatLng> polylineCoordinates = [];
   LocationData? currentLocation;
 
-  static const LatLng source = LatLng(8.874913, 38.819923);
-  static const LatLng destination = LatLng(8.898961, 38.815061);
+  late LatLng source;
+  late LatLng destination;
+  
 
   void getCurrentPosition() async {
     Location location = Location();
@@ -45,9 +48,22 @@ class _AgentMapState extends State<AgentMap> {
       }
     }
 
+
     location.getLocation().then((value) {
       currentLocation = value;
-      log('here in current location');
+      setState(() {});
+    });
+    GoogleMapController googleMapController = await _controller.future;
+
+    location.onLocationChanged.listen((LocationData currentLocation) {
+      this.currentLocation = currentLocation;
+
+      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
+          zoom: 14.4746,
+        ),
+      ));
       setState(() {});
     });
   }
@@ -70,17 +86,18 @@ class _AgentMapState extends State<AgentMap> {
     } catch (e) {}
   }
 
-  // void getCurrentPosition() async {
-  //   Location location = Location();
-  // }
-
   @override
   void initState() {
-    getPolyLines();
+    source = widget.source;
+    destination = widget.destination;
     getCurrentPosition();
+    getPolyLines();
     super.initState();
   }
 
+  void despose() {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +109,7 @@ class _AgentMapState extends State<AgentMap> {
               child: CircularProgressIndicator(),
             )
           : GoogleMap(
-              initialCameraPosition: const CameraPosition(
+              initialCameraPosition: CameraPosition(
                 target: source,
                 zoom: 14.4746,
               ),
@@ -105,7 +122,7 @@ class _AgentMapState extends State<AgentMap> {
                 ),
               },
               markers: {
-                const Marker(
+                 Marker(
                   markerId: MarkerId('source'),
                   position: source,
                   infoWindow: InfoWindow(title: 'Source'),
@@ -117,16 +134,19 @@ class _AgentMapState extends State<AgentMap> {
                       currentLocation!.latitude!, currentLocation!.longitude!),
                   infoWindow: const InfoWindow(title: 'Current Location'),
                   icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueGreen,
+                    BitmapDescriptor.hueViolet,
                   ),
                 ),
-                const Marker(
+                Marker(
                   markerId: MarkerId('Destination'),
                   position: destination,
                   infoWindow: InfoWindow(title: 'Destination'),
                   icon: BitmapDescriptor.defaultMarker,
                 ),
               },
+              onMapCreated: (controller){
+                _controller.complete(controller);
+              }
             ),
     );
   }

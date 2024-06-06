@@ -1,5 +1,7 @@
 
+import 'package:wecollect/feature/landing/data/recent_activity_model.dart';
+
 abstract class DashboardRepository {
   Future<Map<String,String>> getDashboardData();
-  Future<Map<String,dynamic>> recentActivity();
+  Future<List<ActivityData>> recentActivity();
 }

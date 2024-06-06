@@ -15,11 +15,8 @@ class DashboardCubit extends Cubit<DashboardState> {
       emit(DashboardLoading());
       final dashboardData = await dashboardRepository.getDashboardData();
       final recentActivityData = await dashboardRepository.recentActivity();
-      List<Map<String, String>> recentActivities =
-          recentActivityData['data'].toList();
-
       emit(DashboardLoaded(
-          statistics: dashboardData, recentActivity: recentActivities));
+          statistics: dashboardData, recentActivity: recentActivityData));
     } catch (e) {
       emit(DashboardError(e.toString()));
     }

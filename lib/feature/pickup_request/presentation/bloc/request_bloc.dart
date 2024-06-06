@@ -18,7 +18,7 @@ class RequestCubit extends Cubit<RequestState> {
     }
   }
 
-  void createRequest(Map<String, String> request) async {
+  void createRequest(Map<String, dynamic> request) async {
     emit(RequestLoading());
     try {
       final response = await repository.createRequest(request);

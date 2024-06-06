@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 
 import '../../../../core/dj/injection.dart';
@@ -15,12 +16,28 @@ class PickUpHome extends StatefulWidget {
 }
 
 class _PickUpHomeState extends State<PickUpHome> {
+
+  late String? role;
+
+  void getRole() async {
+    final storage = FlutterSecureStorage();
+    // role = await storage.read(key: 'role');
+    role = 'client';
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getRole();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: BlocProvider(
-        create: (context) => getIt<RequestCubit>(),
+        create: (context) => getIt<RequestCubit>()..fetchRequests(),
         child: Scaffold(
             appBar: AppBar(
                 automaticallyImplyLeading: false,
@@ -53,9 +70,9 @@ class _PickUpHomeState extends State<PickUpHome> {
                     ),
                   ],
                 )),
-            body: const TabBarView(
+            body: TabBarView(
               children: [
-                PickUpRequest(),
+                role == 'agent'? PickUpRequest():role=='client'?PickUpRequest():Center(child: Text("Couldn't get your role, try to sign out and sign in again.")),
                 PickUpHistory(),
               ],
             )),

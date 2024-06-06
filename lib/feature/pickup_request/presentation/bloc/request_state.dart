@@ -1,4 +1,4 @@
-
+import '../../data/request_data_model.dart';
 
 sealed class RequestState{}
 
@@ -17,6 +17,6 @@ class RequestError extends RequestState{
 }
 
 class RequestLoaded extends RequestState{
-  final List requests;
+  final List<Data> requests;
   RequestLoaded({required this.requests});
 }
