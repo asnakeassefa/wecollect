@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
@@ -6,14 +8,14 @@ import '../../../landing/presentation/widget/recent_activity_card.dart';
 import '../bloc/request_bloc.dart';
 import '../bloc/request_state.dart';
 
-class PickUpHistory extends StatefulWidget {
-  const PickUpHistory({super.key});
+class PickUpAssigned extends StatefulWidget {
+  const PickUpAssigned({super.key});
 
   @override
-  State<PickUpHistory> createState() => _PickUpHistoryState();
+  State<PickUpAssigned> createState() => _PickUpAssignedState();
 }
 
-class _PickUpHistoryState extends State<PickUpHistory> {
+class _PickUpAssignedState extends State<PickUpAssigned> {
   @override
   Widget build(BuildContext context) {
 
@@ -105,6 +107,7 @@ class _PickUpHistoryState extends State<PickUpHistory> {
             },
           );   
     } 
+    
     return BlocConsumer<RequestCubit, RequestState>(
       listener: (context, state) {
         if (state is RequestError) {
@@ -122,7 +125,7 @@ class _PickUpHistoryState extends State<PickUpHistory> {
               child: Column(
                 children: [
                   const Text(
-                    'Pick Up History',
+                    'Pick Up Assigned',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 24),

@@ -60,6 +60,7 @@ dependencies:
   location: ^6.0.1
   image_picker: ^1.1.2
   http_parser: ^4.0.2
+  flutter_native_splash: ^2.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -116,7 +117,13 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icons/logo.jpg"
+  image_path: "assets/images/wecollect_logo.png"
   min_sdk_android: 21
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_native_splash:
+  color: "#0E846D"
+  background_image: "assets/images/wecollect_logo.png"
+  android_12:
+    color: "#0E846D"
+    background_image: "assets/images/wecollect_logo.png"

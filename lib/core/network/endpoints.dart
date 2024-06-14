@@ -7,4 +7,5 @@ class Endpoints {
   static String dashboard = "$baseUrl/api/wasteplasticrequestor/history/2/agent";
   static String recentActivity = "$baseUrl/api/wasteplasticrequestor/latest/3/client";
   static String pickRequest = "$baseUrl/api/wasteplasticrequestor/requestpickup/create";
+  static String agentRequest = "$baseUrl/api/taskassigned";
 }

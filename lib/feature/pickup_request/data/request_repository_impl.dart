@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import '../../../core/network/api_provider.dart';
 import '../../../core/network/endpoints.dart';
@@ -79,5 +80,26 @@ class RequestRepositoryImp implements RequestRepository {
   Future<String> updateRequest(Map<String, String> request) {
     // TODO: implement updateRequest
     throw UnimplementedError();
+  }
+  
+  @override
+  Future<List<Data>> getAgentRequests() async{
+    try {
+      final _storage = FlutterSecureStorage();
+      final userId = await _storage.read(key: 'userId');
+      final url = "${Endpoints.agentRequest}/$userId";
+
+      final response = await api.get(url);
+      log(response.data.toString());
+      if (response.statusCode == 200) {
+        ActivityModel res = ActivityModel.fromJson(response.data);
+        return res.data ?? [];
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
   }
 }

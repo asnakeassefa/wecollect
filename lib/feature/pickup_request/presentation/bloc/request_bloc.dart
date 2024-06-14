@@ -18,6 +18,16 @@ class RequestCubit extends Cubit<RequestState> {
     }
   }
 
+  void fetchAgentRequests() async {
+    emit(RequestLoading());
+    try {
+      final response = await repository.getAgentRequests();
+      emit(RequestLoaded(requests: response));
+    } catch (e) {
+      emit(RequestError(message: e.toString()));
+    }
+  }
+
   void createRequest(Map<String, dynamic> request) async {
     emit(RequestLoading());
     try {

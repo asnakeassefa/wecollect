@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
+import 'package:wecollect/core/utility/widget/button.dart';
+import 'package:wecollect/core/utility/widget/button2.dart';
 import 'package:wecollect/feature/profile/presentation/bloc/user_bloc.dart';
 import 'package:wecollect/feature/profile/presentation/bloc/user_state.dart';
 
@@ -28,6 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // Example for using secure storage, adjust as needed
   }
   File? _image;
+  var isloading = false;
   final ImagePicker _picker = ImagePicker();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -74,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     content: Text(state.message),
                   ));
                 }
-                if(state is UserLoaded){
+                if (state is UserLoaded) {
                   setState(() {
                     _nameController.text = state.user.data?.name ?? "";
                     _emailController.text = state.user.data?.email ?? "";
@@ -92,7 +95,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   );
                 } else if (state is UserLoaded) {
-                  
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
@@ -202,33 +204,42 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 20),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    log(_image!.path.toString());
-                                    topContext
-                                        .read<UserCubit>()
-                                        .updateUserProfile({
-                                      'name': _nameController.text,
-                                      'email': _emailController.text,
-                                      'phone': _phoneController.text,
-                                      'role': role,
-                                      'profile_photo': _image != null
-                                          ? _image!.path
-                                          : 'https://via.placeholder.com/150',
-                                    });
-                                  },
-                                  child: const Text('Save'),
-                                ),
                               ],
                             ),
                           ),
                           actions: <Widget>[
-                            TextButton(
+                            CustomButton(
                               onPressed: () {
-                                Navigator.of(context).pop();
+                                final userCubit = topContext.read<UserCubit>();
+                                userCubit.updateUserProfile({
+                                  'name': _nameController.text,
+                                  'email': _emailController.text,
+                                  'phone': _phoneController.text,
+                                  'role': role,
+                                  'profile_photo': _image != null
+                                      ? _image!.path
+                                      : 'https://via.placeholder.com/150',
+                                });
+                                userCubit.stream.listen((state) {
+                                  if (state is UserLoaded) {
+                                    Navigator.pop(context);
+                                  }
+                                  if (state is UserLoading){
+                                    setState(() {
+                                      isloading = true;
+                                    });
+                                  }
+                                }); 
                               },
-                              child: const Text('Cancel'),
+                              isLoading: isloading,
+                              text: "Save",
                             ),
+                            SizedBox(height: 10),
+                            CustomButton2(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                text: "Cancel")
                           ],
                         );
                       },

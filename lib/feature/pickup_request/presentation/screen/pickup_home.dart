@@ -5,6 +5,7 @@ import 'package:wecollect/core/utility/theme/theme.dart';
 
 import '../../../../core/dj/injection.dart';
 import '../bloc/request_bloc.dart';
+import 'pickup_assigned.dart';
 import 'pickup_history.dart';
 import 'pickup_request.dart';
 
@@ -16,13 +17,12 @@ class PickUpHome extends StatefulWidget {
 }
 
 class _PickUpHomeState extends State<PickUpHome> {
-
-  late String? role;
+  String? role = '';
 
   void getRole() async {
     final storage = FlutterSecureStorage();
     // role = await storage.read(key: 'role');
-    role = 'client';
+    role = await storage.read(key: 'role');
     setState(() {});
   }
 
@@ -36,8 +36,15 @@ class _PickUpHomeState extends State<PickUpHome> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: BlocProvider(
-        create: (context) => getIt<RequestCubit>()..fetchRequests(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => getIt<RequestCubit>()..fetchRequests(),
+          ),
+          BlocProvider(
+            create: (context) => getIt<RequestCubit>()..fetchAgentRequests(),
+          ),
+        ],
         child: Scaffold(
             appBar: AppBar(
                 automaticallyImplyLeading: false,
@@ -51,16 +58,18 @@ class _PickUpHomeState extends State<PickUpHome> {
                 centerTitle: true,
                 bottom: TabBar(
                   indicatorColor: AppColors.primaryColor,
-                  tabs: const [
+                  tabs: [
                     Tab(
                       child: Text(
-                        'Pick Up Request',
-                        style: TextStyle(
+                        role == 'agent'
+                            ? 'Pick Up Assigned'
+                            : 'Pick Up Request',
+                        style: const TextStyle(
                           fontSize: 16,
                         ),
                       ),
                     ),
-                    Tab(
+                    const Tab(
                       child: Text(
                         'Pick Up History',
                         style: TextStyle(
@@ -72,7 +81,13 @@ class _PickUpHomeState extends State<PickUpHome> {
                 )),
             body: TabBarView(
               children: [
-                role == 'agent'? PickUpRequest():role=='client'?PickUpRequest():Center(child: Text("Couldn't get your role, try to sign out and sign in again.")),
+                role == 'agent'
+                    ? PickUpAssigned()
+                    : role == 'client'
+                        ? PickUpRequest()
+                        : Center(
+                            child: Text(
+                                "Couldn't get your role, try to sign out and sign in again.")),
                 PickUpHistory(),
               ],
             )),

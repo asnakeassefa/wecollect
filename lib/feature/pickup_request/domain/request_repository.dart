@@ -8,6 +8,7 @@ abstract class RequestRepository {
   Future<String> deleteRequest(String id);
   Future<List<Data>> getRequests();
   Future<String> getRequest(String id);
+  Future<List<Data>> getAgentRequests();
   Future<String> acceptRequest(String id);
   Future<String> rejectRequest(String id);
   Future<String> completeRequest(String id);
