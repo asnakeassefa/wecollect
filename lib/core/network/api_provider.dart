@@ -1,7 +1,7 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:wecollect/core/error/exception.dart';
 import 'package:wecollect/core/network/endpoints.dart';
 
 class Api {
@@ -9,11 +9,10 @@ class Api {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Api() {
-    dio.options.connectTimeout = const Duration(milliseconds: 30000); //5s
-    dio.options.receiveTimeout = const Duration(milliseconds: 20000);
+    dio.options.connectTimeout = const Duration(milliseconds: 30000); // 30s
+    dio.options.receiveTimeout = const Duration(milliseconds: 20000); // 20s
 
-    // add interceptro which handle refresh token
-
+    // add interceptor to handle refresh token
     dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
         // add token to header
@@ -24,28 +23,67 @@ class Api {
       onResponse: (response, handler) {
         return handler.next(response); // continue
       },
-      onError: (DioError e, handler) async {
-        // handle refresh token if response return 401
-        if (e.response?.statusCode == 401) {
-          // retry request
+      onError: (DioException e, handler) async {
+        // handle refresh token if response returns 401
+        // log('api provider error');
+        // log("here in one ${e.response.toString().toLowerCase()}");
+        
+        // log(resData.toString());
+        // log(resData['detail'].toString());
+
+        if (e.response?.statusCode == 401 && e.response.toString().toLowerCase().contains('accesstoken')) {
           try {
+            // log('before refresh');
             await refreshToken();
-            await retryRequest(e.requestOptions);
-          } catch (refreshTokenError) {
-            DioException refreshTokenError = DioException(
-              message: "refresh",
-              requestOptions: e.requestOptions,
-              response: e.response,
-            );
-            handler.next(refreshTokenError);
+            log('after refresh');
+            final options = e.requestOptions;
+            options.headers["Authorization"] =
+                "Bearer ${await _storage.read(key: 'accessToken')}";
+            final cloneReq = await retryRequest(options);
+            return handler.resolve(cloneReq);
+          } catch (error) {
+
+            log('here in error after refresh');
+            log(error.toString());
+            if (error.toString().toLowerCase().contains('expired')) {
+              
+              return handler.next(DioException(
+                message: 'tokenexpired',
+                requestOptions: e.requestOptions,
+                response: Response(
+                  requestOptions: e.requestOptions,
+                  statusCode: 401,
+                  data: 'tokenexpired',
+                ),
+              ));
+            } else if (error is DioException) {
+              return handler.next(error);
+            } else {
+              return handler.next(DioException(
+                requestOptions: e.requestOptions,
+                error: error,
+              ));
+            }
           }
+        } else if(e.response?.statusCode == 401){
+          // log('here in exception');
+          return handler.next(DioException(
+            message: 'expired',
+            requestOptions: e.requestOptions,
+            response: Response(
+              requestOptions: e.requestOptions,
+              statusCode: 401,
+              data: 'expired',
+            ),
+          ));
         }
+        
         return handler.next(e); //continue
       },
     ));
   }
 
-  //  retry request function
+  // retry request function
   Future<Response> retryRequest(RequestOptions requestOptions) async {
     return dio.request(
       requestOptions.path,
@@ -61,33 +99,32 @@ class Api {
   Future<void> refreshToken() async {
     try {
       final token = await _storage.read(key: 'refreshToken');
-      log(token.toString());
       final refreshTokenResponse = await dio.post(Endpoints.refresh, data: {
-        "refreshToken": token,
+        "refresh": token,
       });
-
       if (refreshTokenResponse.statusCode == 200) {
         // save new token
-        final accessToken = refreshTokenResponse.data["accessToken"];
+        final accessToken = refreshTokenResponse.data["access"];
         // save new token
         await _storage.write(key: 'accessToken', value: accessToken);
       } else {
-        throw Exception();
+        throw NetworkException(message: 'token expired');
       }
     } catch (e) {
-      throw Exception();
-      // throw Exception("expired");
+      rethrow;
     }
   }
 
   // post method with data
   Future<Response> post(String url, Map data) async {
     try {
+      log(data.toString());
+      log(url);
       var res = await dio.post(url, data: data);
+      log(res.toString());
       return res;
-    } on DioError catch (e) {
-      // Empty body
-      throw Exception(e.response?.data['message']);
+    } on DioException {
+      rethrow;
     }
   }
 
@@ -95,9 +132,8 @@ class Api {
   Future<Response> get(String url) async {
     try {
       return await dio.get(url);
-    } on DioError catch (e) {
-      // Empty body
-      throw Exception(e.response?.data['message']);
+    } on DioException {
+      rethrow;
     }
   }
 
@@ -105,9 +141,8 @@ class Api {
   Future<Response> put(String url, Map data) async {
     try {
       return await dio.put(url, data: data);
-    } on DioError catch (e) {
-      // Empty body
-      throw Exception(e.response?.data['message']);
+    } on DioException {
+      rethrow;
     }
   }
 
@@ -115,9 +150,8 @@ class Api {
   Future<Response> delete(String url) async {
     try {
       return await dio.delete(url);
-    } on DioError catch (e) {
-      // Empty body
-      throw Exception(e.response?.data['message']);
+    } on DioException {
+      rethrow;
     }
   }
 
@@ -125,9 +159,8 @@ class Api {
   Future<Response> upload(String url, FormData data) async {
     try {
       return await dio.post(url, data: data);
-    } on DioError catch (e) {
-      // Empty body
-      throw Exception(e.response?.data['message']);
+    } on DioException {
+      rethrow;
     }
   }
 
@@ -135,9 +168,8 @@ class Api {
   Future<Response> edit(String url, FormData data) async {
     try {
       return await dio.put(url, data: data);
-    } on DioError catch (e) {
-      // Empty body
-      throw Exception(e.response?.data['message']);
+    } on DioException {
+      rethrow;
     }
   }
 }

@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:wecollect/feature/landing/domain/dashboard_repository.dart';
@@ -18,6 +20,7 @@ class DashboardCubit extends Cubit<DashboardState> {
       emit(DashboardLoaded(
           statistics: dashboardData, recentActivity: recentActivityData));
     } catch (e) {
+      log("hello in bloc ${e.toString()}");
       emit(DashboardError(e.toString()));
     }
   }

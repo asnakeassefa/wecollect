@@ -1,3 +1,4 @@
+import '../../data/assigned_activity_model.dart';
 import '../../data/request_data_model.dart';
 
 sealed class RequestState{}
@@ -19,4 +20,8 @@ class RequestError extends RequestState{
 class RequestLoaded extends RequestState{
   final List<Data> requests;
   RequestLoaded({required this.requests});
+}
+class AgentRequestLoaded extends RequestState{
+  final List<AssignedData> requests;
+  AgentRequestLoaded({required this.requests});
 }

@@ -8,13 +8,13 @@ class UserModel {
   UserModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['success'] = success;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -66,19 +66,19 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['email'] = this.email;
-    data['name'] = this.name;
-    data['phone_number'] = this.phoneNumber;
-    data['profile_photo'] = this.profilePhoto;
-    data['country'] = this.country;
-    data['region'] = this.region;
-    data['zone'] = this.zone;
-    data['woreda'] = this.woreda;
-    data['kebele'] = this.kebele;
-    data['role'] = this.role;
-    data['user_status'] = this.userStatus;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['email'] = email;
+    data['name'] = name;
+    data['phone_number'] = phoneNumber;
+    data['profile_photo'] = profilePhoto;
+    data['country'] = country;
+    data['region'] = region;
+    data['zone'] = zone;
+    data['woreda'] = woreda;
+    data['kebele'] = kebele;
+    data['role'] = role;
+    data['user_status'] = userStatus;
     return data;
   }
 }

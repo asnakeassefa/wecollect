@@ -6,7 +6,7 @@ import 'onboarding_state.dart';
 @injectable
 class OnboardingCubit extends Cubit<OnboardingState> {
   OnboardingCubit() : super((OnboardingInit()));
-  FlutterSecureStorage _storage = FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   void isLoaded() async {
     emit(OnboardingLoading());
     try {

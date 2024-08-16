@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
-import 'package:wecollect/feature/auth/presentation/screen/signup.dart';
 
 import '../../../../core/dj/injection.dart';
 import '../../../../core/utility/widget/button.dart';

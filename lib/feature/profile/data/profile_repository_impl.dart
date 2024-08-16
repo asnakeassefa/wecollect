@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
-import 'package:wecollect/core/network/endpoints.dart';
 import 'package:wecollect/feature/profile/data/user_model.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -19,13 +18,13 @@ class ProfileRepositoryImpl implements  ProfileRepository{
   @override
   Future<UserModel> getProfile() async{
     try {
-      final _storage = FlutterSecureStorage();
-      final userId = await _storage.read(key: 'userId');
+      const storage = FlutterSecureStorage();
+      final userId = await storage.read(key: 'userId');
       int id = int.parse(userId!);
-      final response = await api.get("https://wasteplasticcollector.onrender.com/user/${id}/");
+      final response = await api.get("https://wasteplasticcollector.onrender.com/user/$id/");
       if (response.statusCode == 200) {
-        final _storage = FlutterSecureStorage();
-        await _storage.write(key: 'profile_photo', value: response.data['data']['profile_photo']);
+        const storage = FlutterSecureStorage();
+        await storage.write(key: 'profile_photo', value: response.data['data']['profile_photo']);
         return UserModel.fromJson(response.data);
       } else {
         throw Exception('Failed to load data');
@@ -38,24 +37,26 @@ class ProfileRepositoryImpl implements  ProfileRepository{
   @override
   Future<String> updateProfile(Map<String, dynamic> profile) async{
 
-    final userId = await FlutterSecureStorage().read(key: 'userId');
-   String url = "https://wasteplasticcollector.onrender.com/user/update/${userId}/";
+    final userId = await const FlutterSecureStorage().read(key: 'userId');
+   String url = "https://wasteplasticcollector.onrender.com/user/update/$userId/";
 
    log(profile.toString());
-   log('in ffff');
+   
     try {
 
       final formData = FormData.fromMap(
         {
           "email": profile['email'],
           "name": profile['name'],
+          "latitude": profile['latitude'],
+          "longitude": profile['longitude'],
           "phone_number":profile['phone_number'],
           "role":profile['role'],
         },
       );
 
       List<String> types = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
-      if (profile['profile_photo'] != null) {
+      if (profile['profile_photo'] != null || profile['profile_photo'] != '') {
         final extension = profile['profile_photo'].split('.').last.toLowerCase();
         if (!types.contains(extension)) {
           throw Exception('Invalid image type');
@@ -69,12 +70,14 @@ class ProfileRepositoryImpl implements  ProfileRepository{
           ),
         ));
       }
-
+      log('before log');
       final response = await api.edit(url, formData);
-      if (response.statusCode == 200) {
-        log('her in success');
+      log(response.toString());
+      log(response.statusCode.toString());
+      if (response.statusCode.toString()[0] == '2') {
         return 'success';
       } else {
+        log(response.statusCode.toString());
         throw Exception('Failed to update profile');
       }
     } catch (e) {

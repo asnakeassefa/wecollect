@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -16,13 +15,19 @@ class DashboardRepositoryImp implements DashboardRepository {
   @override
   Future<Map<String, String>> getDashboardData() async {
     try {
-      final _storage = FlutterSecureStorage();
-      final url = Endpoints.dashboard;
-      final userId = await _storage.read(key: 'userId');
-      int id = int.parse(userId!);
-      final userinfo = await api.get("https://wasteplasticcollector.onrender.com/user/${id}/");
+      const storage = FlutterSecureStorage();
+      log('landing0');
+      final userId = await storage.read(key: 'userId');
+      final role = await storage.read(key: 'role');
+      final url = "${Endpoints.dashboard}/$userId/$role";
+      // final userinfo = await api.get("${Endpoints.user}/$userId");
+      log('url');
+      log(url);
       final response = await api.get(url);
+      log('if there is exception');
+      
       if (response.statusCode == 200) {
+        
         DashboardModel res = DashboardModel.fromJson(response.data);
         return {
           'point': res.reward.toString(),
@@ -31,9 +36,12 @@ class DashboardRepositoryImp implements DashboardRepository {
           'recycled': res.totalCollection.toString(),
         };
       } else {
+        log('inside an error1');
         throw Exception('Failed to load data');
       }
     } catch (e) {
+      log(e.toString());
+      log('here in dashboard ${e.toString()}');
       rethrow;
     }
   }
@@ -41,17 +49,19 @@ class DashboardRepositoryImp implements DashboardRepository {
   @override
   Future<List<ActivityData>> recentActivity() async{
     try {
-      final url = Endpoints.recentActivity;
-
+      const storage = FlutterSecureStorage();
+      final userId = await storage.read(key: 'userId');
+      final role = await storage.read(key: 'role');
+      final url = "${Endpoints.recentActivity}/$userId/$role";
       final response = await api.get(url);
       if (response.statusCode == 200) {
+        
         LatestActivityModel res = LatestActivityModel.fromJson(response.data);
         return res.data ?? [];
       } else {
         throw Exception('Failed to load data');
       }
     } catch (e) {
-      log(e.toString());
       rethrow;
     }
   }

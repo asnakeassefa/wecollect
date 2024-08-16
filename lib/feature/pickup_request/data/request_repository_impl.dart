@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
+import 'package:wecollect/feature/pickup_request/data/assigned_activity_model.dart';
 import '../../../core/network/api_provider.dart';
 import '../../../core/network/endpoints.dart';
-import '../../landing/data/recent_activity_model.dart';
 import '../domain/request_repository.dart';
 import 'request_data_model.dart';
 
@@ -28,13 +28,18 @@ class RequestRepositoryImp implements RequestRepository {
   Future<String> createRequest(Map<String, dynamic> request) async {
     try {
       String url = Endpoints.request;
+      log('here in request');
+      log(request.toString());
       final response = await api.post(url, request);
+      log(response.data.toString());
       if (response.statusCode == 201) {
+        
         return response.data['message'];
       } else {
         throw Exception(response.data['message']);
       }
     } catch (e) {
+      log(e.toString());
       rethrow;
     }
   }
@@ -54,8 +59,10 @@ class RequestRepositoryImp implements RequestRepository {
   @override
   Future<List<Data>> getRequests() async{
     try {
-      final url = Endpoints.recentActivity;
-
+      final role = await const FlutterSecureStorage().read(key: 'role');
+      final userId = await const FlutterSecureStorage().read(key: 'userId');
+      final url = "${Endpoints.recentActivity}/$userId/$role";
+      log(url);
       final response = await api.get(url);
       log(response.data.toString());
       if (response.statusCode == 200) {
@@ -71,34 +78,46 @@ class RequestRepositoryImp implements RequestRepository {
   }
 
   @override
-  Future<String> rejectRequest(String id) {
-    // TODO: implement rejectRequest
-    throw UnimplementedError();
-  }
-
-  @override
   Future<String> updateRequest(Map<String, String> request) {
     // TODO: implement updateRequest
     throw UnimplementedError();
   }
   
   @override
-  Future<List<Data>> getAgentRequests() async{
+  Future<List<AssignedData>> getAgentRequests() async{
     try {
-      final _storage = FlutterSecureStorage();
-      final userId = await _storage.read(key: 'userId');
+      const storage = FlutterSecureStorage();
+      final userId = await storage.read(key: 'userId');
       final url = "${Endpoints.agentRequest}/$userId";
 
       final response = await api.get(url);
+      
       log(response.data.toString());
+
       if (response.statusCode == 200) {
-        ActivityModel res = ActivityModel.fromJson(response.data);
+        AssignedModel res = AssignedModel.fromJson(response.data);
         return res.data ?? [];
       } else {
         throw Exception('Failed to load data');
       }
     } catch (e) {
+      log('before exception');
       log(e.toString());
+      rethrow;
+    }
+  }
+  
+  @override
+  Future<String> updateStatus(Map<String, dynamic> payload) async{
+    try {
+      String url = Endpoints.request;
+      final response = await api.post(url, payload);
+      if (response.statusCode == 201) {
+        return response.data['message'];
+      } else {
+        throw Exception(response.data['message']);
+      }
+    } catch (e) {
       rethrow;
     }
   }

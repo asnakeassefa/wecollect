@@ -1,10 +1,12 @@
-import 'dart:developer';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:location/location.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/core/utility/widget/button.dart';
 import 'package:wecollect/core/utility/widget/button2.dart';
@@ -13,6 +15,7 @@ import 'package:wecollect/feature/profile/presentation/bloc/user_state.dart';
 
 import '../../../../core/dj/injection.dart';
 import '../../../auth/presentation/screen/login.dart';
+import '../../../pickup_request/presentation/widget/location_pick.dart';
 import '../../../reward/presentation/screen/reward_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -23,7 +26,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  FlutterSecureStorage _storage = FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<void> _clearUserData() async {
     // Clear any user data you may have stored (e.g., tokens, user info)
@@ -37,6 +40,13 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _phoneController = TextEditingController();
   String role = "";
   late BuildContext topContext;
+    LatLng? selectedLocation;
+  String amPm = 'AM';
+  String weightUnit = 'kg';
+  bool useCurrentLocation = false;
+  LocationData? currentLocation;
+  final Completer<GoogleMapController> _controller = Completer();
+  
   Future<void> _pickImage() async {
     // Request permissions
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -66,11 +76,10 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             children: [
               BlocConsumer<UserCubit, UserState>(listener: (context, state) {
-                if (state is UserError && state.message.contains('token')) {
+
+                if (state is UserError && state.message.contains('expired')) {
                   // navigate to login page
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const LoginScreen();
-                  }));
+                  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                 } else if (state is UserError) {
                   // show error message
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -88,9 +97,9 @@ class _ProfilePageState extends State<ProfilePage> {
               }, builder: (context, state) {
                 topContext = context;
                 if (state is UserLoading) {
-                  return SizedBox(
+                  return const SizedBox(
                     height: 300,
-                    child: const Center(
+                    child: Center(
                       child: CircularProgressIndicator(),
                     ),
                   );
@@ -191,18 +200,64 @@ class _ProfilePageState extends State<ProfilePage> {
                                       labelText: 'Phone Number'),
                                 ),
                                 const SizedBox(height: 20),
-                                GestureDetector(
-                                  onTap: _pickImage,
-                                  child: CircleAvatar(
-                                    radius: 40,
-                                    backgroundImage: _image != null
-                                        ? FileImage(_image!)
-                                        : null,
-                                    child: _image == null
-                                        ? const Icon(Icons.camera_alt, size: 40)
-                                        : null,
-                                  ),
-                                ),
+                                StatefulBuilder(builder: (BuildContext context,
+                                    StateSetter setState) {
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      final pickedFile =
+                                          await _picker.pickImage(
+                                              source: ImageSource.gallery);
+
+                                      setState(() {
+                                        if (pickedFile != null) {
+                                          _image = File(pickedFile.path);
+                                        } else {
+                                          print('No image selected.');
+                                        }
+                                      });
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 40,
+                                      backgroundImage: _image != null
+                                          ? FileImage(_image!)
+                                          : null,
+                                      child: _image == null
+                                          ? const Icon(Icons.camera_alt,
+                                              size: 40)
+                                          : null,
+                                    ),
+                                  );
+                                }),
+                                // location picker
+                                CustomButton2(
+                    onPressed: () {
+                      
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LocationPicker(
+                                      myLocation: currentLocation)))
+                          .then((value) async {
+                        selectedLocation = value;
+                        GoogleMapController googleMapController =
+                            await _controller.future;
+                        googleMapController
+                            .animateCamera(CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                            target: value,
+                            zoom: 14.4746,
+                          ),
+                        ));
+                        currentLocation = LocationData.fromMap({
+                          'latitude': value.latitude,
+                          'longitude': value.longitude
+                        });
+                        setState(() {});
+                      });
+                    },
+                    text: 'Pick Location'),
+
+
                                 const SizedBox(height: 20),
                               ],
                             ),
@@ -216,25 +271,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                   'email': _emailController.text,
                                   'phone': _phoneController.text,
                                   'role': role,
+                                  'latitude': selectedLocation?.latitude,
+                                  'longitude': selectedLocation?.longitude,
                                   'profile_photo': _image != null
                                       ? _image!.path
-                                      : 'https://via.placeholder.com/150',
+                                      : '',
                                 });
-                                userCubit.stream.listen((state) {
-                                  if (state is UserLoaded) {
-                                    Navigator.pop(context);
-                                  }
-                                  if (state is UserLoading){
-                                    setState(() {
-                                      isloading = true;
-                                    });
-                                  }
-                                }); 
+                                Navigator.pop(context);
                               },
                               isLoading: isloading,
                               text: "Save",
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             CustomButton2(
                                 onPressed: () {
                                   Navigator.pop(context);
@@ -283,16 +331,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   // inactiveThumbColor: AppColors.primaryColor,
                   // activeColor: AppColors.primaryColor,
-                  thumbColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
+                  thumbColor: WidgetStateProperty.resolveWith<Color>(
+                      (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.disabled)) {
                       return AppColors.primaryColor.withOpacity(.90);
                     }
                     return AppColors.primaryColor.withOpacity(.90);
                   }),
-                  trackColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.disabled)) {
+                  trackColor: WidgetStateProperty.resolveWith<Color>(
+                      (Set<WidgetState> states) {
+                    if (states.contains(WidgetState.disabled)) {
                       return AppColors.primaryColor.withOpacity(.1);
                     }
                     return AppColors.primaryColor.withOpacity(.3);

@@ -11,7 +11,7 @@ import '../../../core/network/api_provider.dart';
 @Injectable(as: AuthenticationRepository)
 class AuthenticationRepositoryImp implements AuthenticationRepository {
   Api api = Api();
-  FlutterSecureStorage _storage = FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   @override
   Future<String> login(Map<String, String> loginInfo) async {
     try {
@@ -30,8 +30,10 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
 
         final userId = await _storage.read(key: 'userId');
       int id = int.parse(userId!);
-      final profileDetail = await api.get("https://wasteplasticcollector.onrender.com/user/${id}/");
-      await _storage.write(key: 'profile_photo', value: profileDetail.data['data']['profile_photo']);
+      final profileDetail = await api.get("${Endpoints.user}/$id/");
+      log(profileDetail.toString());
+      await _storage.write(key: 'profile_photo', value:profileDetail.data['data']['profile_photo']);
+      log(Endpoints.baseUrl + profileDetail.data['data']['profile_photo'].toString());
         return res['message'];
       } else {
         throw Exception(res['msg']);

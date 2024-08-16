@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
-import 'package:wecollect/feature/auth/presentation/screen/signup.dart';
+import 'package:wecollect/feature/onboarding/screen/individual_org_catagory.dart';
 
 import '../../../core/utility/widget/button.dart';
 
@@ -31,28 +31,34 @@ class _UserCatagoryState extends State<UserCatagory> {
             children: [
               const SizedBox(height: 24),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Row(
                   children: [
-                    Text(
-                      textAlign: TextAlign.center,
-                      'Choose your catagory',
-                      style: TextStyle(
-                          color: AppColors.secondaryColor,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * .9,
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        'Choose your catagory',
+                        style: TextStyle(
+                            color: AppColors.secondaryColor,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Row(
                   children: [
-                    Text(
-                      'Welcome back! please select your role',
-                      style: TextStyle(fontSize: 16),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * .9,
+                      child: const Text(
+                        'Welcome back! please select your role',
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                   ],
                 ),
@@ -69,7 +75,7 @@ class _UserCatagoryState extends State<UserCatagory> {
                     },
                     child: Container(
                       width: MediaQuery.sizeOf(context).width * .43,
-                      height: MediaQuery.sizeOf(context).height * .3,
+                      height: MediaQuery.sizeOf(context).height * .32,
                       decoration: BoxDecoration(
                         border: Border.all(
                             width: 2,
@@ -83,7 +89,7 @@ class _UserCatagoryState extends State<UserCatagory> {
                           Image.asset(
                             width: 87,
                             height: 97,
-                            'assets/images/onboarding5.png',
+                            'assets/icons/client.png',
                           ),
                           const Text(
                             'Initiate Trash Collection',
@@ -110,8 +116,9 @@ class _UserCatagoryState extends State<UserCatagory> {
                       });
                     },
                     child: Container(
-                      width: MediaQuery.sizeOf(context).width * .4,
-                      height: MediaQuery.sizeOf(context).height * .3,
+                      padding: const EdgeInsets.all(1),
+                      width: MediaQuery.sizeOf(context).width * .43,
+                      height: MediaQuery.sizeOf(context).height * .32,
                       decoration: BoxDecoration(
                         border: Border.all(
                             width: 2,
@@ -125,7 +132,7 @@ class _UserCatagoryState extends State<UserCatagory> {
                           Image.asset(
                             width: 87,
                             height: 97,
-                            'assets/images/onboarding4.png',
+                            'assets/icons/agent.png',
                           ),
                           const Text(
                             'Conduct Waste Collection',
@@ -152,7 +159,7 @@ class _UserCatagoryState extends State<UserCatagory> {
                 text: "Next",
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return SignupScreen(
+                    return UserTypeCatagory(
                       role: role[selected],
                     );
                   }));

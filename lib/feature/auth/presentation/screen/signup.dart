@@ -3,17 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/feature/auth/presentation/screen/login.dart';
-import 'package:wecollect/feature/auth/presentation/screen/otp.dart';
 
 import '../../../../core/dj/injection.dart';
 import '../../../../core/utility/widget/button.dart';
-import '../../../home_page.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_state.dart';
 
 class SignupScreen extends StatefulWidget {
   final String role;
-  const SignupScreen({super.key, required this.role});
+  final String type;
+  const SignupScreen({super.key, required this.role, required this.type});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();

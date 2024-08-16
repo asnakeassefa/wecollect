@@ -23,6 +23,7 @@ class _PickUpHomeState extends State<PickUpHome> {
     final storage = FlutterSecureStorage();
     // role = await storage.read(key: 'role');
     role = await storage.read(key: 'role');
+    role = 'client';
     setState(() {});
   }
 

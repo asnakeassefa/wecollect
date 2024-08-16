@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import '../../domain/request_repository.dart';
@@ -14,6 +16,7 @@ class RequestCubit extends Cubit<RequestState> {
       final response = await repository.getRequests();
       emit(RequestLoaded(requests: response));
     } catch (e) {
+      log(e.toString());
       emit(RequestError(message: e.toString()));
     }
   }
@@ -22,7 +25,7 @@ class RequestCubit extends Cubit<RequestState> {
     emit(RequestLoading());
     try {
       final response = await repository.getAgentRequests();
-      emit(RequestLoaded(requests: response));
+      emit(AgentRequestLoaded(requests: response));
     } catch (e) {
       emit(RequestError(message: e.toString()));
     }
@@ -32,6 +35,7 @@ class RequestCubit extends Cubit<RequestState> {
     emit(RequestLoading());
     try {
       final response = await repository.createRequest(request);
+      log(response.toString());
       emit(RequestSuccess(message: response));
     } catch (e) {
       emit(RequestError(message: e.toString()));

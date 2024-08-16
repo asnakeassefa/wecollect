@@ -1,5 +1,6 @@
 
 
+import '../data/assigned_activity_model.dart';
 import '../data/request_data_model.dart';
 
 abstract class RequestRepository {
@@ -8,8 +9,7 @@ abstract class RequestRepository {
   Future<String> deleteRequest(String id);
   Future<List<Data>> getRequests();
   Future<String> getRequest(String id);
-  Future<List<Data>> getAgentRequests();
-  Future<String> acceptRequest(String id);
-  Future<String> rejectRequest(String id);
+  Future<List<AssignedData>> getAgentRequests();
+  Future<String> updateStatus(Map<String,dynamic> payload);
   Future<String> completeRequest(String id);
 }

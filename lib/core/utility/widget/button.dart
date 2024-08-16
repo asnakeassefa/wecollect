@@ -6,8 +6,9 @@ class CustomButton extends StatelessWidget {
   final String text;
   final Function onPressed;
   final bool? isLoading;
+  final double? width;
   const CustomButton(
-      {super.key, required this.onPressed, required this.text, this.isLoading});
+      {super.key, required this.onPressed, required this.text, this.isLoading, this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +19,14 @@ class CustomButton extends StatelessWidget {
         }
       },
       style: ElevatedButton.styleFrom(
-        minimumSize: Size(MediaQuery.sizeOf(context).width * 0.90, 50),
+        minimumSize: width != null? Size(width!,50): Size(MediaQuery.sizeOf(context).width * 0.90, 50),
         backgroundColor: AppColors.primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
       child: isLoading == true
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),

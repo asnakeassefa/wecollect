@@ -27,9 +27,9 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
   late String userName = "";
   late String profileImage = "";
   void getUserId() async {
-    var _storage = FlutterSecureStorage();
-    String? name = await _storage.read(key: 'name');
-    String? profile = await _storage.read(key: 'profile_photo');
+    var storage = const FlutterSecureStorage();
+    String? name = await storage.read(key: 'name');
+    String? profile = await storage.read(key: 'profile_photo');
     log(profile.toString());
     setState(() {
       userName = name??"";
@@ -37,6 +37,7 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
     });
   }
 
+  @override
   void initState() {
     super.initState();
     getUserId();
@@ -126,11 +127,15 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
         ),
         body: BlocConsumer<DashboardCubit, DashboardState>(
           listener: (context, state) {
-            if(state is DashboardError && state.message.contains('token')){
+            if(state is DashboardError && state.message.contains('expired')){
               // navigate to login page
-              Navigator.push(context,MaterialPageRoute(builder: (context){
-                return const LoginScreen();
-              }));
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return const LoginScreen();
+                }),
+                (route) => false,
+              );
             } else if(state is DashboardError){
               // show error message
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -215,7 +220,7 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
                             state.recentActivity.map((recentActivityCard) {
                           return RecentActivityCard(
                             date: recentActivityCard.requestDate ?? "",
-                            title: recentActivityCard.wastePlasticType ?? "",
+                            title: recentActivityCard.wastePlasticType?.type??"",
                             time: recentActivityCard.requestTime?? "",
                             status:recentActivityCard.pickUpStatus ?? "",
                           );
@@ -232,7 +237,7 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('Failed to load data'),
+                  const Text('Failed to load data'),
               // retry button here to call the cubit again
               ElevatedButton(
                 onPressed: () {

@@ -132,7 +132,7 @@ class _PickUpHistoryState extends State<PickUpHistory> {
                         status: recentActivityCard.pickUpStatus??"",
                         date: recentActivityCard.requestDate??"",
                         time: recentActivityCard.requestTime??"",
-                        title: recentActivityCard.wastePlasticType??"",
+                        title: recentActivityCard.wastePlasticType?.type??"",
                         onPressed: (){
                           requestDetail();
                         },
