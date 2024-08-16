@@ -1,16 +1,24 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
 import 'package:wecollect/core/utility/widget/button.dart';
+import 'package:wecollect/core/utility/widget/button2.dart';
 
+import '../../../../core/network/endpoints.dart';
 import '../../../../core/utility/refactor/date_formater.dart';
 import '../bloc/request_bloc.dart';
 import '../bloc/request_state.dart';
+import '../widget/location_pick.dart';
 
 class PickUpRequest extends StatefulWidget {
   const PickUpRequest({super.key});
@@ -20,17 +28,41 @@ class PickUpRequest extends StatefulWidget {
 }
 
 class _PickUpRequestState extends State<PickUpRequest> {
+  final TextEditingController weightController = TextEditingController();
   final TextEditingController _dateController =
       TextEditingController(text: formatCustomDate(DateTime.now()));
   DateTime dateTime = DateTime.now();
   final Completer<GoogleMapController> _controller = Completer();
-
+  FlutterSecureStorage _storage = FlutterSecureStorage();
   int hourValue = 1;
   int minuteValue = 0;
+  int pickupType = 1;
+  int wateTypeId = 1;
+  LatLng? selectedLocation;
   String amPm = 'AM';
   String weightUnit = 'kg';
   bool useCurrentLocation = false;
   LocationData? currentLocation;
+
+  String token = "";
+
+  File? _image;
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  void getToken() async {
+    token = await _storage.read(key: 'accessToken') ?? "";
+    log(token);
+    setState(() {});
+  }
 
   void getCurrentPosition() async {
     Location location = Location();
@@ -58,23 +90,12 @@ class _PickUpRequestState extends State<PickUpRequest> {
       setState(() {});
     });
     GoogleMapController googleMapController = await _controller.future;
-
-    location.onLocationChanged.listen((LocationData currentLocation) {
-      this.currentLocation = currentLocation;
-
-      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(currentLocation.latitude!, currentLocation.longitude!),
-          zoom: 14.4746,
-        ),
-      ));
-      setState(() {});
-    });
   }
 
   @override
   void initState() {
     super.initState();
+    getToken();
     getCurrentPosition();
   }
 
@@ -85,8 +106,11 @@ class _PickUpRequestState extends State<PickUpRequest> {
         if (state is RequestSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.primaryColor,
+              content: Text(
+                state.message,
+                style: const TextStyle(color: Colors.green),
+              ),
+              backgroundColor: Colors.white,
             ),
           );
         }
@@ -173,8 +197,8 @@ class _PickUpRequestState extends State<PickUpRequest> {
                 ),
 
                 // dropdown for hours and minutes and pm and am with separet container
-
                 const SizedBox(height: 20),
+
                 Row(
                   children: [
                     // dropdown hours only
@@ -342,6 +366,54 @@ class _PickUpRequestState extends State<PickUpRequest> {
                   ],
                 ),
 
+                const SizedBox(height: 20),
+                const Text("pick waste type",
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 10),
+                token != ""
+                    ? MultiSelectDropDown.network(
+                        onOptionSelected: (options) {
+                          pickupType = options.first.value as int;
+                        },
+                        networkConfig: NetworkConfig(
+                          url: Endpoints.wasteType,
+                          method: RequestMethod.get,
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer $token'
+                          },
+                        ),
+                        borderColor: Colors.black54,
+                        borderWidth: 1,
+
+                        chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+                        responseParser: (response) {
+                          log(response.toString());
+                          final list =
+                              (response['data'] as List<dynamic>).map((e) {
+                            final item = e as Map<String, dynamic>;
+                            return ValueItem(
+                              label: item['type'],
+                              value: item['id'],
+                            );
+                          }).toList();
+
+                          return Future.value(list);
+                        },
+                        maxItems: 1,
+                        // searchEnabled: true,
+                        // selectedOptions: options,
+                        responseErrorBuilder: ((context, body) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text('Error while fetching the data'),
+                          );
+                        }),
+                      )
+                    : Container(),
+
+                const SizedBox(height: 20),
                 const SizedBox(height: 24),
                 const Text(
                   'Quantitiy/ Weight',
@@ -359,7 +431,8 @@ class _PickUpRequestState extends State<PickUpRequest> {
                     children: [
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width * 0.5,
-                        child: const TextField(
+                        child: TextField(
+                          controller: weightController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
                             hintText: "Enter Weight",
@@ -377,7 +450,7 @@ class _PickUpRequestState extends State<PickUpRequest> {
                         child: DropdownButton<String>(
                           underline: const SizedBox(),
                           value: weightUnit,
-                          items: <String>['kg', 'lbs'].map((String value) {
+                          items: <String>['kg'].map((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Padding(
@@ -399,6 +472,36 @@ class _PickUpRequestState extends State<PickUpRequest> {
                 ),
 
                 const SizedBox(height: 24),
+                const Text(
+                  'Add Image',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 20),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      _image == null
+                          ? Text('No image selected.')
+                          : SizedBox(
+                              height: 250,
+                              width: 400,
+                              child: Image.file(_image!, fit: BoxFit.fitHeight),
+                            ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () => _pickImage(ImageSource.gallery),
+                        child: Text('Pick Image from Gallery'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => _pickImage(ImageSource.camera),
+                        child: Text('Pick Image from Camera'),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
                 SizedBox(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -414,7 +517,6 @@ class _PickUpRequestState extends State<PickUpRequest> {
                     ],
                   ),
                 ),
-
                 SizedBox(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -452,7 +554,7 @@ class _PickUpRequestState extends State<PickUpRequest> {
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 Container(
                   height: MediaQuery.sizeOf(context).height * 0.3,
                   width: MediaQuery.sizeOf(context).width,
@@ -464,7 +566,10 @@ class _PickUpRequestState extends State<PickUpRequest> {
                     children: [
                       currentLocation == null
                           ? const Center(
-                              child: CircularProgressIndicator(),
+                              child: SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircularProgressIndicator()),
                             )
                           : GoogleMap(
                               initialCameraPosition: CameraPosition(
@@ -487,75 +592,67 @@ class _PickUpRequestState extends State<PickUpRequest> {
                               onMapCreated: (controller) {
                                 _controller.complete(controller);
                               }),
-                      Positioned(
-                        top: 200,
-                        left: 300,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: IconButton(
-                              onPressed: () {
-                                showModalBottomSheet(
-                                  showDragHandle: true,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                  ),
-                                  isScrollControlled: true,
-                                  constraints: BoxConstraints(
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height *
-                                            0.8,
-                                  ),
-                                  context: context,
-                                  builder: (context) {
-                                    return GoogleMap(
-                                        initialCameraPosition: CameraPosition(
-                                          target: LatLng(
-                                              currentLocation!.latitude!,
-                                              currentLocation!.longitude!),
-                                          zoom: 14.4746,
-                                        ),
-                                        markers: {
-                                          Marker(
-                                            markerId: const MarkerId(
-                                                'Current Loacation'),
-                                            position: LatLng(
-                                                currentLocation!.latitude!,
-                                                currentLocation!.longitude!),
-                                            infoWindow: const InfoWindow(
-                                                title: 'Current Location'),
-                                            icon: BitmapDescriptor
-                                                .defaultMarkerWithHue(
-                                              BitmapDescriptor.hueViolet,
-                                            ),
-                                          ),
-                                        },
-                                        onMapCreated: (controller) {
-                                          _controller.complete(controller);
-                                        });
-                                  },
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.open_in_full_rounded,
-                                color: Colors.white,
-                              )),
-                        ),
-                      )
                     ],
                   ),
                 ),
+                const SizedBox(height: 24),
+                CustomButton2(
+                    isDisabled: useCurrentLocation,
+                    onPressed: () {
+                      if (useCurrentLocation && currentLocation != null) {
+                        return;
+                      }
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LocationPicker(
+                                      myLocation: currentLocation)))
+                          .then((value) async {
+                        selectedLocation = value;
+                        GoogleMapController googleMapController =
+                            await _controller.future;
+                        googleMapController
+                            .animateCamera(CameraUpdate.newCameraPosition(
+                          CameraPosition(
+                            target: value,
+                            zoom: 14.4746,
+                          ),
+                        ));
+                        currentLocation = LocationData.fromMap({
+                          'latitude': value.latitude,
+                          'longitude': value.longitude
+                        });
+                        setState(() {});
+                      });
+                    },
+                    text: 'Pick Location'),
 
                 const SizedBox(height: 24),
                 CustomButton(
                     isLoading: state is RequestLoading,
-                    onPressed: () {
+                    onPressed: () async {
+                      double lat = 0.0;
+                      double long = 0.0;
+
+                      if (useCurrentLocation && currentLocation != null) {
+                        lat = currentLocation?.latitude ?? 0.0;
+                        long = currentLocation?.longitude ?? 0.0;
+                      } else if (selectedLocation != null) {
+                        lat = selectedLocation?.latitude ?? 0.0;
+                        long = selectedLocation?.longitude ?? 0.0;
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please select a location'),
+                            backgroundColor: Colors.grey,
+                          ),
+                        );
+                        return;
+                      }
                       // request pickup
+                      String? requester =
+                          await _storage.read(key: 'userId') ?? "";
+                      int user = int.parse(requester);
                       context.read<RequestCubit>().createRequest(
                           // {
                           // 'date': formatCustomDate(dateTime),
@@ -563,15 +660,29 @@ class _PickUpRequestState extends State<PickUpRequest> {
                           // 'weight': '1 $weightUnit',
                           // 'latitude': '9.0192',
                           // 'longitude': '38.7525',
+
+                          // "requestor": 1,
+                          // "wastePlastic_type": 1,
+                          // "request_date": "2024-06-19",
+                          // "request_time": "13:45:00",
+                          // "wastePlastic_size":10,
+                          // "wastePlastic_address": "AA",
+                          // "unique_location": "koshe",
+                          // "latitude": 8.32526,
+                          // "longitude": 39.5346
                           // }
+
                           {
-                            "requestor": 1,
-                            "wastePlastic_type": "plastic",
-                            "wastePlastic_size": 10,
-                            "wastePlastic_address": "AA",
-                            "unique_location": "koshe",
-                            "latitude": 8.32526,
-                            "longitude": 39.5346
+                            "requestor": user,
+                            "wastePlastic_type": pickupType,
+                            "request_date":
+                                "${dateTime.year}-${dateTime.month}-${dateTime.day}",
+                            "request_time":
+                                '$hourValue:$minuteValue:00'.toString(),
+                            "wastePlastic_size":
+                                int.parse(weightController.text),
+                            "latitude": lat,
+                            "longitude": long,
                           });
                     },
                     text: "Request Pickup"),

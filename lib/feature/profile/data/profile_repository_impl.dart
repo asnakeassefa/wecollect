@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
+import 'package:wecollect/core/network/endpoints.dart';
 import 'package:wecollect/feature/profile/data/user_model.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -20,8 +21,9 @@ class ProfileRepositoryImpl implements  ProfileRepository{
     try {
       const storage = FlutterSecureStorage();
       final userId = await storage.read(key: 'userId');
+
       int id = int.parse(userId!);
-      final response = await api.get("https://wasteplasticcollector.onrender.com/user/$id/");
+      final response = await api.get("${Endpoints.user}/$id/");
       if (response.statusCode == 200) {
         const storage = FlutterSecureStorage();
         await storage.write(key: 'profile_photo', value: response.data['data']['profile_photo']);
@@ -38,7 +40,7 @@ class ProfileRepositoryImpl implements  ProfileRepository{
   Future<String> updateProfile(Map<String, dynamic> profile) async{
 
     final userId = await const FlutterSecureStorage().read(key: 'userId');
-   String url = "https://wasteplasticcollector.onrender.com/user/update/$userId/";
+   String url = "${Endpoints.user}/update/$userId/";
 
    log(profile.toString());
    

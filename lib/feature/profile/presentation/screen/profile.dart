@@ -175,7 +175,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: () {
                   // show alert Box to edit profile
 
-                  if (_nameController.text.isNotEmpty) {
+                  if (_emailController.text.isNotEmpty) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

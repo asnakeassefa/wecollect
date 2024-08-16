@@ -48,14 +48,14 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
     try {
       final url = Uri.parse(Endpoints.signup);
       final response = await http.post(url, body: userData);
-
+      log(response.statusCode.toString());
       if (response.statusCode == 201) {
         return "user registerd successfully";
       } else {
         throw Exception("Couldn't login to the sytem: please try again!");
       }
     } catch (e) {
-      throw Exception("Login Faild");
+      throw Exception("Registration failed: please try again!");
     }
   }
 

@@ -23,7 +23,6 @@ class _PickUpHomeState extends State<PickUpHome> {
     final storage = FlutterSecureStorage();
     // role = await storage.read(key: 'role');
     role = await storage.read(key: 'role');
-    role = 'client';
     setState(() {});
   }
 
@@ -41,9 +40,6 @@ class _PickUpHomeState extends State<PickUpHome> {
         providers: [
           BlocProvider(
             create: (context) => getIt<RequestCubit>()..fetchRequests(),
-          ),
-          BlocProvider(
-            create: (context) => getIt<RequestCubit>()..fetchAgentRequests(),
           ),
         ],
         child: Scaffold(
@@ -83,12 +79,9 @@ class _PickUpHomeState extends State<PickUpHome> {
             body: TabBarView(
               children: [
                 role == 'agent'
-                    ? PickUpAssigned()
-                    : role == 'client'
-                        ? PickUpRequest()
-                        : Center(
-                            child: Text(
-                                "Couldn't get your role, try to sign out and sign in again.")),
+                    ? PickUpAssigned():
+                      role == 'client'?
+                        PickUpRequest(): Center(child: Text('User with this role cannot access this page')),
                 PickUpHistory(),
               ],
             )),
