@@ -12,6 +12,7 @@ import 'package:wecollect/core/utility/widget/button.dart';
 import 'package:wecollect/core/utility/widget/button2.dart';
 import 'package:wecollect/feature/profile/presentation/bloc/user_bloc.dart';
 import 'package:wecollect/feature/profile/presentation/bloc/user_state.dart';
+import 'package:wecollect/feature/profile/presentation/screen/edit_profile.dart';
 
 import '../../../../core/dj/injection.dart';
 import '../../../auth/presentation/screen/login.dart';
@@ -40,13 +41,13 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _phoneController = TextEditingController();
   String role = "";
   late BuildContext topContext;
-    LatLng? selectedLocation;
+  LatLng? selectedLocation;
   String amPm = 'AM';
   String weightUnit = 'kg';
   bool useCurrentLocation = false;
   LocationData? currentLocation;
   final Completer<GoogleMapController> _controller = Completer();
-  
+
   Future<void> _pickImage() async {
     // Request permissions
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -76,10 +77,10 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             children: [
               BlocConsumer<UserCubit, UserState>(listener: (context, state) {
-
                 if (state is UserError && state.message.contains('expired')) {
                   // navigate to login page
-                  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/login', (route) => false);
                 } else if (state is UserError) {
                   // show error message
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -174,125 +175,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () {
                   // show alert Box to edit profile
-
-                  if (_emailController.text.isNotEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Edit Profile'),
-                          content: SingleChildScrollView(
-                            child: Column(
-                              children: <Widget>[
-                                TextField(
-                                  controller: _nameController,
-                                  decoration:
-                                      const InputDecoration(labelText: 'Name'),
-                                ),
-                                TextField(
-                                  controller: _emailController,
-                                  decoration:
-                                      const InputDecoration(labelText: 'Email'),
-                                ),
-                                TextField(
-                                  controller: _phoneController,
-                                  decoration: const InputDecoration(
-                                      labelText: 'Phone Number'),
-                                ),
-                                const SizedBox(height: 20),
-                                StatefulBuilder(builder: (BuildContext context,
-                                    StateSetter setState) {
-                                  return GestureDetector(
-                                    onTap: () async {
-                                      final pickedFile =
-                                          await _picker.pickImage(
-                                              source: ImageSource.gallery);
-
-                                      setState(() {
-                                        if (pickedFile != null) {
-                                          _image = File(pickedFile.path);
-                                        } else {
-                                          print('No image selected.');
-                                        }
-                                      });
-                                    },
-                                    child: CircleAvatar(
-                                      radius: 40,
-                                      backgroundImage: _image != null
-                                          ? FileImage(_image!)
-                                          : null,
-                                      child: _image == null
-                                          ? const Icon(Icons.camera_alt,
-                                              size: 40)
-                                          : null,
-                                    ),
-                                  );
-                                }),
-                                // location picker
-                                CustomButton2(
-                    onPressed: () {
-                      
-                      Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LocationPicker(
-                                      myLocation: currentLocation)))
-                          .then((value) async {
-                        selectedLocation = value;
-                        GoogleMapController googleMapController =
-                            await _controller.future;
-                        googleMapController
-                            .animateCamera(CameraUpdate.newCameraPosition(
-                          CameraPosition(
-                            target: value,
-                            zoom: 14.4746,
-                          ),
-                        ));
-                        currentLocation = LocationData.fromMap({
-                          'latitude': value.latitude,
-                          'longitude': value.longitude
-                        });
-                        setState(() {});
-                      });
-                    },
-                    text: 'Pick Location'),
-
-
-                                const SizedBox(height: 20),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            CustomButton(
-                              onPressed: () {
-                                final userCubit = topContext.read<UserCubit>();
-                                userCubit.updateUserProfile({
-                                  'name': _nameController.text,
-                                  'email': _emailController.text,
-                                  'phone': _phoneController.text,
-                                  'role': role,
-                                  'latitude': selectedLocation?.latitude,
-                                  'longitude': selectedLocation?.longitude,
-                                  'profile_photo': _image != null
-                                      ? _image!.path
-                                      : '',
-                                });
-                                Navigator.pop(context);
-                              },
-                              isLoading: isloading,
-                              text: "Save",
-                            ),
-                            const SizedBox(height: 10),
-                            CustomButton2(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                text: "Cancel")
-                          ],
-                        );
-                      },
-                    );
-                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfile(),
+                    ),
+                  );
                 },
               ),
               ListTile(
