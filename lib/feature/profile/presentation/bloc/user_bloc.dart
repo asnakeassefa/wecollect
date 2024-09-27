@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
@@ -27,6 +29,7 @@ class UserCubit extends Cubit<UserState> {
   void updateUserProfile(Map<String, dynamic> user) async {
     emit(UserLoading());
     try {
+      log(user.toString());
       final result = await profileRepository.updateProfile(user);
       if (result == 'success') {
         emit(UserSuccess(message: 'Profile updated successfully'));
@@ -36,7 +39,8 @@ class UserCubit extends Cubit<UserState> {
         getUserProfile();
       }
     } catch (e) {
-      emit(UserError(message: e.toString()));
+      log(e.toString());
+      emit(UserError(message: 'Faild to update profile'));
       getUserProfile();
     }
   }

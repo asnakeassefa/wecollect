@@ -8,15 +8,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:wecollect/core/utility/theme/theme.dart';
-import 'package:wecollect/core/utility/widget/button.dart';
-import 'package:wecollect/core/utility/widget/button2.dart';
 import 'package:wecollect/feature/profile/presentation/bloc/user_bloc.dart';
 import 'package:wecollect/feature/profile/presentation/bloc/user_state.dart';
 import 'package:wecollect/feature/profile/presentation/screen/edit_profile.dart';
 
 import '../../../../core/dj/injection.dart';
 import '../../../auth/presentation/screen/login.dart';
-import '../../../pickup_request/presentation/widget/location_pick.dart';
 import '../../../reward/presentation/screen/reward_page.dart';
 
 class ProfilePage extends StatefulWidget {

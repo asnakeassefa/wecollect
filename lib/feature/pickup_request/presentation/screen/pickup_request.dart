@@ -33,7 +33,7 @@ class _PickUpRequestState extends State<PickUpRequest> {
       TextEditingController(text: formatCustomDate(DateTime.now()));
   DateTime dateTime = DateTime.now();
   final Completer<GoogleMapController> _controller = Completer();
-  FlutterSecureStorage _storage = FlutterSecureStorage();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   int hourValue = 1;
   int minuteValue = 0;
   int pickupType = 1;
@@ -434,7 +434,7 @@ class _PickUpRequestState extends State<PickUpRequest> {
                         child: TextField(
                           controller: weightController,
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             hintText: "Enter Weight",
                             hintStyle: TextStyle(color: Colors.grey),
                             border: InputBorder.none,
@@ -482,20 +482,20 @@ class _PickUpRequestState extends State<PickUpRequest> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       _image == null
-                          ? Text('No image selected.')
+                          ? const Text('No image selected.')
                           : SizedBox(
                               height: 250,
                               width: 400,
                               child: Image.file(_image!, fit: BoxFit.fitHeight),
                             ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () => _pickImage(ImageSource.gallery),
-                        child: Text('Pick Image from Gallery'),
+                        child: const Text('Pick Image from Gallery'),
                       ),
                       ElevatedButton(
                         onPressed: () => _pickImage(ImageSource.camera),
-                        child: Text('Pick Image from Camera'),
+                        child: const Text('Pick Image from Camera'),
                       ),
                     ],
                   ),
@@ -535,16 +535,16 @@ class _PickUpRequestState extends State<PickUpRequest> {
                         },
                         // inactiveThumbColor: AppColors.primaryColor,
                         // activeColor: AppColors.primaryColor,
-                        thumbColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.disabled)) {
+                        thumbColor: WidgetStateProperty.resolveWith<Color>(
+                            (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.disabled)) {
                             return AppColors.primaryColor.withOpacity(.90);
                           }
                           return AppColors.primaryColor.withOpacity(.90);
                         }),
-                        trackColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.disabled)) {
+                        trackColor: WidgetStateProperty.resolveWith<Color>(
+                            (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.disabled)) {
                             return AppColors.primaryColor.withOpacity(.1);
                           }
                           return AppColors.primaryColor.withOpacity(.3);

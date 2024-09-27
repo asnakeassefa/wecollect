@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:wecollect/core/network/endpoints.dart';
 import '../../../core/network/api_provider.dart';
@@ -12,15 +11,11 @@ class MapRepositoryImpl implements MapRepository{
   Api api = Api();
   @override
   Future<String> acceptRequest(Map<String, dynamic> request) async{
-    final userId =  await const FlutterSecureStorage().read(key: 'userId');
-    final url = '${Endpoints.acceptRequest}/$userId/';
+    final id = request['requestId'];
+    final url = '${Endpoints.acceptRequest}/$id/';
     
     try {
-      log('before');
-      log(request.toString());
       final response = await api.put(url, request);
-      log(response.statusCode.toString());
-      log(response.data.toString());
 
       if (response.statusCode == 200) {
         return response.data['message'];
@@ -36,8 +31,9 @@ class MapRepositoryImpl implements MapRepository{
 
   @override
   Future<String> completeRequest(Map<String, dynamic> request) async{
-    final userId = const FlutterSecureStorage().read(key: 'userId');
-    final url = '${Endpoints.completeRequest}/$userId/';
+    // final userId = const FlutterSecureStorage().read(key: 'userId');
+    final id = request['requestId'];
+    final url = '${Endpoints.completeRequest}/$id/';
 
     try {
       final response = await api.put(url, request);

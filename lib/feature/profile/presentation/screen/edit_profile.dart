@@ -141,12 +141,12 @@ class _EditProfileState extends State<EditProfile> {
                               backgroundImage: _image != null
                                   ? Image.file(_image!).image
                                   : null,
-                              child: _image == null ? Icon(Icons.person) : null,
+                              child: _image == null ? const Icon(Icons.person) : null,
                             ),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             ElevatedButton(
                               onPressed: () => _pickImage(),
-                              child: Text('Pick Image'),
+                              child: const Text('Pick Image'),
                             ),
                             // ElevatedButton(
                             //   onPressed: () => _pickImage(ImageSource.camera),
@@ -253,31 +253,31 @@ class _EditProfileState extends State<EditProfile> {
                       const SizedBox(height: 20),
                       Row(
                         children: [
-                          CustomButton(
-                            width: MediaQuery.sizeOf(context).width * .43,
-                            onPressed: () {
-                              final userCubit = context.read<UserCubit>();
-                              userCubit.updateUserProfile({
-                                'name': _nameController.text,
-                                'email': _emailController.text,
-                                'phone': _phoneController.text,
-                                'role': role,
-                                'latitude': selectedLocation?.latitude,
-                                'longitude': selectedLocation?.longitude,
-                                'profile_photo':
-                                    _image != null ? _image!.path : '',
-                              });
-                            },
-                            isLoading: false,
-                            text: "Save",
-                          ),
-                          const Spacer(),
+                          
                           CustomButton2(
                             width: MediaQuery.sizeOf(context).width * .43,
                             onPressed: () {
                               Navigator.pop(context);
                             },
                             text: "Cancel",
+                          ),
+                          const Spacer(),
+                          CustomButton(
+                            width: MediaQuery.sizeOf(context).width * .43,
+                            onPressed: () {
+                              final userCubit = context.read<UserCubit>();
+                              userCubit.updateUserProfile({
+                                if(_nameController.text.isNotEmpty) 'name': _nameController.text,
+                                if(_emailController.text.isNotEmpty) 'email': _emailController.text,
+                                if(_phoneController.text.isNotEmpty)'phone': _phoneController.text,
+                                if(currentLocation?.latitude != null)'latitude': currentLocation?.latitude,
+                                if(currentLocation?.longitude != null)'longitude': currentLocation?.longitude,
+                                if((_image != null) && _image!.path.isNotEmpty)'profile_photo':
+                                    _image != null ? _image!.path : '',
+                              });
+                            },
+                            isLoading: false,
+                            text: "Save",
                           ),
                         ],
                       ),

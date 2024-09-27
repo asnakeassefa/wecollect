@@ -22,9 +22,11 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  void register(Map<String, String> userInfo) async {
+  void register(Map<String, dynamic> userInfo) async {
     emit(AuthLoading());
     try {
+      log('here');
+      log(userInfo.toString());
       final user = await authRepository.signup(userInfo);
       emit(AuthSuccess("You Registerd Successfully"));
     } on Exception catch (e) {

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../../../core/dj/injection.dart';
 import '../../../../core/utility/theme/theme.dart';
@@ -24,24 +26,37 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
   // List<Widget> recentActivities = [
   //   RecentActivityCard(isCompleted: true),
   // ];
+  late WebSocketChannel channel;
   late String userName = "";
   late String profileImage = "";
   void getUserId() async {
     var storage = const FlutterSecureStorage();
     String? name = await storage.read(key: 'name');
     String? profile = await storage.read(key: 'profile_photo');
+    profile = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYaO6lWOo30L2AqIVF76Mx8WS-8OrnlUJw7w&s';
     log(profile.toString());
     setState(() {
-      userName = name??"";
-      profileImage = profile??"";
+      userName = name ?? "";
+      profileImage = profile ?? "";
     });
   }
 
   @override
   void initState() {
+    final url = Uri.parse(
+        'wss://echo.websocket.org');
+    channel = IOWebSocketChannel.connect(url);
+
     super.initState();
     getUserId();
   }
+
+  @override
+  void dispose() {
+    channel.sink.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -84,19 +99,48 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
           actions: [
             Stack(
               children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const NotificationPage();
-                    }));
+                StreamBuilder(
+                  stream: channel.stream,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      // Display the received data
+                      log('Received data: ${snapshot.data}');
+                      // return Text('Received data: ${snapshot.data}');
+                      return IconButton(
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const NotificationPage();
+                          }));
+                        },
+                        icon: Icon(
+                          Icons.notifications,
+                          color: AppColors.secondaryColor,
+                          size: 33,
+                        ),
+                      );
+                    } else {
+                      return const Text('No data received');
+                    }
                   },
-                  icon: Icon(
-                    Icons.notifications,
-                    color: AppColors.secondaryColor,
-                    size: 33,
-                  ),
                 ),
+                // IconButton(
+                //   onPressed: () {
+                //     Navigator.push(context,
+                //         MaterialPageRoute(builder: (context) {
+                //       return const NotificationPage();
+                //     }));
+                //   },
+                //   icon: Icon(
+                //     Icons.notifications,
+                //     color: AppColors.secondaryColor,
+                //     size: 33,
+                //   ),
+                // ),
                 Container(
                   width: 40,
                   height: 40,
@@ -127,7 +171,7 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
         ),
         body: BlocConsumer<DashboardCubit, DashboardState>(
           listener: (context, state) {
-            if(state is DashboardError && state.message.contains('expired')){
+            if (state is DashboardError && state.message.contains('expired')) {
               // navigate to login page
               Navigator.pushAndRemoveUntil(
                 context,
@@ -136,7 +180,7 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
                 }),
                 (route) => false,
               );
-            } else if(state is DashboardError){
+            } else if (state is DashboardError) {
               // show error message
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(state.message),
@@ -204,7 +248,8 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
                                     topRight: Radius.circular(10))),
                             icon: 'assets/icons/recycle.svg',
                             title: 'Recycled Plastics',
-                            value: "${state.statistics['recycled']} KG" ?? "0 KG",
+                            value:
+                                "${state.statistics['recycled']} KG" ?? "0 KG",
                           ),
                         ],
                       ),
@@ -220,9 +265,10 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
                             state.recentActivity.map((recentActivityCard) {
                           return RecentActivityCard(
                             date: recentActivityCard.requestDate ?? "",
-                            title: recentActivityCard.wastePlasticType?.type??"",
-                            time: recentActivityCard.requestTime?? "",
-                            status:recentActivityCard.pickUpStatus ?? "",
+                            title:
+                                recentActivityCard.wastePlasticType?.type ?? "",
+                            time: recentActivityCard.requestTime ?? "",
+                            status: recentActivityCard.pickUpStatus ?? "",
                           );
                         }).toList(),
                       ),
@@ -238,13 +284,13 @@ class _AgentDashBoardState extends State<AgentDashBoard> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text('Failed to load data'),
-              // retry button here to call the cubit again
-              ElevatedButton(
-                onPressed: () {
-                  context.read<DashboardCubit>().getDashboard();
-                },
-                child: const Text('Retry'),
-              ),
+                  // retry button here to call the cubit again
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<DashboardCubit>().getDashboard();
+                    },
+                    child: const Text('Retry'),
+                  ),
                 ],
               ),
             );

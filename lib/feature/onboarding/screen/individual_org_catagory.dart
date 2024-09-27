@@ -18,7 +18,7 @@ class UserTypeCatagory extends StatefulWidget {
 
 class _UserCatagoryState extends State<UserTypeCatagory> {
   int selected = 0;
-  List<String> type = ['individual', 'organization'];
+  List<bool> type = [false, true];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,7 +168,6 @@ class _UserCatagoryState extends State<UserTypeCatagory> {
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return SignupScreen(
-                      
                       role: widget.role,
                       type: type[selected],
                     );

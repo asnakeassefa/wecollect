@@ -5,11 +5,11 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
+import 'package:wecollect/core/network/api_provider.dart';
 import 'package:wecollect/core/network/endpoints.dart';
 import 'package:wecollect/feature/profile/data/user_model.dart';
 import 'package:http_parser/http_parser.dart';
 
-import '../../../core/network/api_provider.dart';
 import '../domain/profile_repository.dart';
 
 @Injectable(as: ProfileRepository)
@@ -41,7 +41,7 @@ class ProfileRepositoryImpl implements  ProfileRepository{
 
     final userId = await const FlutterSecureStorage().read(key: 'userId');
    String url = "${Endpoints.user}/update/$userId/";
-
+   log(url);
    log(profile.toString());
    
     try {
@@ -49,20 +49,20 @@ class ProfileRepositoryImpl implements  ProfileRepository{
       final formData = FormData.fromMap(
         {
           "email": profile['email'],
-          "name": profile['name'],
-          "latitude": profile['latitude'],
-          "longitude": profile['longitude'],
-          "phone_number":profile['phone_number'],
-          "role":profile['role'],
+          if(profile['name'].toString().isNotEmpty) "name": profile['name'],
+          if(profile['latitued'].toString().isNotEmpty) "latitude": profile['latitude'],
+          if(profile['longitude']!=null) "longitude": profile['longitude'],
+          if(profile['phone_number']!=null) "phone_number":profile['phone_number'],
         },
       );
 
-      List<String> types = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
-      if (profile['profile_photo'] != null || profile['profile_photo'] != '') {
+      // List<String> types = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+      
+      if (profile['profile_photo'] != null && profile['profile_photo'] != '') {
         final extension = profile['profile_photo'].split('.').last.toLowerCase();
-        if (!types.contains(extension)) {
-          throw Exception('Invalid image type');
-        }
+        // if (!types.contains(extension)) {
+        //   throw Exception('Invalid image type');
+        // }
         formData.files.add(MapEntry(
           'profile_photo',
           await MultipartFile.fromFile(
@@ -80,6 +80,8 @@ class ProfileRepositoryImpl implements  ProfileRepository{
         return 'success';
       } else {
         log(response.statusCode.toString());
+        log(response.data.toString());
+        log(response.statusMessage.toString());
         throw Exception('Failed to update profile');
       }
     } catch (e) {

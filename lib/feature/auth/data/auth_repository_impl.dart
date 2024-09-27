@@ -44,11 +44,12 @@ class AuthenticationRepositoryImp implements AuthenticationRepository {
   }
 
   @override
-  Future<String> signup(Map<String, String> userData) async {
+  Future<String> signup(Map<String, dynamic> userData) async {
     try {
-      final url = Uri.parse(Endpoints.signup);
-      final response = await http.post(url, body: userData);
-      log(response.statusCode.toString());
+      final url = Endpoints.signup;
+      log(url.toString());
+      log(userData.toString());
+      final response = await api.post(url , userData);
       if (response.statusCode == 201) {
         return "user registerd successfully";
       } else {

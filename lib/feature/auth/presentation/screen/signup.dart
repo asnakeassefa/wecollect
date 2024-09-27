@@ -11,7 +11,7 @@ import '../bloc/auth_state.dart';
 
 class SignupScreen extends StatefulWidget {
   final String role;
-  final String type;
+  final bool type;
   const SignupScreen({super.key, required this.role, required this.type});
 
   @override
@@ -220,8 +220,10 @@ class _SignupScreenState extends State<SignupScreen> {
                                   "password": _passwordController.text,
                                   "password2": _passwordController.text,
                                   "phone_number": _phoneController.text,
-                                  // "role": widget.role
-                                  "role": 'guest'
+                                  'latitude': 0.0,
+                                  'longitude': 0.0,
+                                  "role": widget.role,
+                                  "is_organization": widget.type
                                 },
                               );
                             }

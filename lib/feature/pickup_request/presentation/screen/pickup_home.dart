@@ -20,7 +20,7 @@ class _PickUpHomeState extends State<PickUpHome> {
   String? role = '';
 
   void getRole() async {
-    final storage = FlutterSecureStorage();
+    final storage = const FlutterSecureStorage();
     // role = await storage.read(key: 'role');
     role = await storage.read(key: 'role');
     setState(() {});
@@ -79,10 +79,10 @@ class _PickUpHomeState extends State<PickUpHome> {
             body: TabBarView(
               children: [
                 role == 'agent'
-                    ? PickUpAssigned():
+                    ? const PickUpAssigned():
                       role == 'client'?
-                        PickUpRequest(): Center(child: Text('User with this role cannot access this page')),
-                PickUpHistory(),
+                        const PickUpRequest(): const Center(child: Text('User with this role cannot access this page')),
+                const PickUpHistory(),
               ],
             )),
       ),

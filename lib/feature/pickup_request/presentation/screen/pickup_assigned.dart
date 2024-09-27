@@ -193,6 +193,7 @@ class _PickUpAssignedState extends State<PickUpAssigned> {
                     const SizedBox(height: 24),
                     Column(
                       children: state.requests.map((recentActivityCard) {
+                        log(recentActivityCard.toString());
                         return RecentActivityCard(
                           status: recentActivityCard.taskStatus ?? "",
                           date: recentActivityCard.assignedDate ?? "",

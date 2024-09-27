@@ -27,7 +27,7 @@ class RecentActivityCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: status == "success" ? AppColors.secondaryColor :status == 'pending'? Colors.orange: Colors.red,
+          color: status == "success" ? AppColors.secondaryColor :status == 'on progress'? Colors.orange: Colors.red,
         ),
         child: Container(
           width: MediaQuery.sizeOf(context).width * 0.97,
