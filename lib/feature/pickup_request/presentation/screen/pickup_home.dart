@@ -20,7 +20,7 @@ class _PickUpHomeState extends State<PickUpHome> {
   String? role = '';
 
   void getRole() async {
-    final storage = const FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
     // role = await storage.read(key: 'role');
     role = await storage.read(key: 'role');
     setState(() {});
